@@ -19,6 +19,7 @@ jobs:
       - name: build
         run: |
           echo building $CONTEXT-$ENV
+          exit 1
         env:
           CONTEXT: ${{ inputs.context }}
           ENV: ${{ matrix.env }}
