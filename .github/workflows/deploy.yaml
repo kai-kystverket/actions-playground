@@ -1,0 +1,40 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      shared: ${{ steps.changes.outputs.shared }}
+      frontend-a: ${{ steps.changes.outputs.frontend-a }}
+      frontend-b: ${{ steps.changes.outputs.frontend-b }}
+      backend: ${{ steps.changes.outputs.backend }}
+    steps:
+      - name: mock dorny/paths-filter
+        id: changes
+        run: |
+          echo "shared=true" >> "$GITHUB_OUTPUT"
+          echo "frontend-a=true" >> "$GITHUB_OUTPUT"
+          echo "frontend-b=false" >> "$GITHUB_OUTPUT"
+          echo "backend=false" >> "$GITHUB_OUTPUT"
+  deploy-frontend-a:
+    needs: changes
+    uses: ./.github/workflows/reusable-build.yaml
+    if: needs.changes.outputs.frontend-a == 'true' || needs.changes.outputs.shared == 'true'
+    with:
+      context: frontend-a
+  deploy-frontend-b:
+    needs: changes
+    uses: ./.github/workflows/reusable-build.yaml
+    if: needs.changes.outputs.frontend-b == 'true' || needs.changes.outputs.shared == 'true'
+    with:
+      context: frontend-b
+  deploy-backend:
+    needs: changes
+    uses: ./.github/workflows/reusable-build.yaml
+    if: needs.changes.outputs.backend == 'true'
+    with:
+      context: backend

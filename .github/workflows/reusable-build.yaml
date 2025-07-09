@@ -1,0 +1,24 @@
+name: Build and push
+on:
+  workflow_call:
+    inputs:
+      context:
+        description: 'directory to use'
+        required: true
+        type: string
+jobs:
+  build:
+    strategy:
+      matrix:
+        env: [test, prod]
+      fail-fast: true
+      max-parallel: 0
+    runs-on: ubuntu-latest
+    environment: ${{ matrix.env }}
+    steps:
+      - name: build
+        run: |
+          echo building $CONTEXT-$ENV
+        env:
+          CONTEXT: ${{ inputs.context }}
+          ENV: ${{ matrix.env }}
