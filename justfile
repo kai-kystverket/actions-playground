@@ -3,4 +3,4 @@ default:
   @just --list -u
 
 act:
-  act -W .github/workflows/deploy.yml
+  act -W .github/workflows/deploy.yaml
