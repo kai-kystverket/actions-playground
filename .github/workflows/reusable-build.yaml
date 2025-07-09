@@ -7,14 +7,9 @@ on:
         required: true
         type: string
 jobs:
-  build:
-    strategy:
-      matrix:
-        env: [test, prod]
-      fail-fast: true
-      max-parallel: 0
+  build-test:
     runs-on: ubuntu-latest
-    environment: ${{ matrix.env }}
+    environment: test
     steps:
       - name: build
         run: |
@@ -22,4 +17,4 @@ jobs:
           exit 1
         env:
           CONTEXT: ${{ inputs.context }}
-          ENV: ${{ matrix.env }}
+          ENV: ${{ github.env }}
