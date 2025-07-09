@@ -14,7 +14,16 @@ jobs:
       - name: build
         run: |
           echo building $CONTEXT-$ENV
-          exit 1
+        env:
+          CONTEXT: ${{ inputs.context }}
+          ENV: ${{ github.env }}
+  build-prod:
+    runs-on: ubuntu-latest
+    environment: test
+    steps:
+      - name: build
+        run: |
+          echo building $CONTEXT-$ENV
         env:
           CONTEXT: ${{ inputs.context }}
           ENV: ${{ github.env }}
