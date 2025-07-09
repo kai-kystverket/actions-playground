@@ -19,6 +19,7 @@ jobs:
           ENV: ${{ github.env }}
   build-prod:
     runs-on: ubuntu-latest
+    needs: build-test
     environment: test
     steps:
       - name: build
