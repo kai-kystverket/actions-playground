@@ -15,23 +15,26 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
     environment: test
-    if: ${{ inputs.release != true }}
+    if: ${{ inputs.release == 'false' }}
     steps:
       - name: build
         run: |
+          echo release is $RELEASE
           echo building $CONTEXT-$ENV
         env:
           CONTEXT: ${{ inputs.context }}
           ENV: ${{ github.env }}
+          RELEASE: ${{ inputs.release }}
   build-prod:
     runs-on: ubuntu-latest
-    needs: build-test
     environment: prod
     if: ${{ inputs.release }}
     steps:
       - name: build
         run: |
           echo building $CONTEXT-$ENV
+          echo release is $RELEASE
         env:
           CONTEXT: ${{ inputs.context == true }}
           ENV: ${{ github.env }}
+          RELEASE: ${{ inputs.release }}

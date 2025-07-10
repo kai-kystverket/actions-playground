@@ -2,5 +2,6 @@
 default:
   @just --list -u
 
-act:
-  act -W .github/workflows/deploy.yaml
+act EVENT="push":
+  act {{EVENT}} -e event.json  -W .github/workflows/deploy.yaml
+
