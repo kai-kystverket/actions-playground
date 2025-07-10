@@ -5,12 +5,15 @@
   "separate-pull-requests": true,
   "packages": {
     "./shared/frontent-a": {
+      "package-name": "frontend-a",
       "release-type": "simple"
     },
-    "./sharedfrontend-b": {
+    "./shared/frontend-b": {
+      "package-name": "frontend-b",
       "release-type": "simple"
     },
     "./backend": {
+      "package-name": "frontend-backend",
       "release-type": "simple"
     }
   },
