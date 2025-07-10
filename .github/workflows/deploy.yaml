@@ -57,7 +57,8 @@ jobs:
   deploy-backend:
     needs: setup
     uses: ./.github/workflows/reusable-build.yaml
-    if: needs.setup.outputs.backend == 'true' || ${{ github.event_name == 'release'}}
+    # if: needs.setup.outputs.backend == 'true' || ${{ github.event_name == 'release'}}
+    if: needs.setup.outputs.backend == 'true'
     with:
       context: backend
       release: ${{ github.event_name == 'release' }}
