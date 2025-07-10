@@ -6,6 +6,10 @@ on:
     paths:
       - shared/**
       - backend/**
+  pull_request:
+    types:
+      - opened
+      - edited
   release:
     types:
       - published
@@ -47,6 +51,7 @@ jobs:
     with:
       context: frontend-a
       release: ${{ github.event_name == 'release' }}
+      pull_request: ${{ github.event_name == 'pull_request'}}
   deploy-frontend-b:
     needs: changes
     uses: ./.github/workflows/reusable-build.yaml
@@ -54,6 +59,7 @@ jobs:
     with:
       context: frontend-b
       release: ${{ github.event_name == 'release' }}
+      pull_request: ${{ github.event_name == 'pull_request'}}
   deploy-backend:
     needs: changes
     uses: ./.github/workflows/reusable-build.yaml
@@ -62,3 +68,4 @@ jobs:
     with:
       context: backend
       release: ${{ github.event_name == 'release' }}
+      pull_request: ${{ github.event_name == 'pull_request'}}

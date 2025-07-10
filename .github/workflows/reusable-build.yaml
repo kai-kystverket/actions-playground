@@ -7,7 +7,12 @@ on:
         required: true
         type: string
       release:
-        description: Release to prod
+        description: Event type release
+        required: true
+        default: false
+        type: boolean
+      pull_request:
+        description: Event type pull request
         required: true
         default: false
         type: boolean
@@ -23,6 +28,13 @@ jobs:
         env:
           CONTEXT: ${{ inputs.context }}
           ENV: ${{ github.env }}
+      - name: deploy
+        if: ${{ inputs.pull_request == false }}
+        run: |
+          echo deploying $CONTEXT-$ENV
+        env:
+          CONTEXT: ${{ inputs.context }}
+          ENV: ${{ github.env }}
   build-test:
     needs: build-dev
     runs-on: ubuntu-latest
@@ -32,6 +44,13 @@ jobs:
       - name: build
         run: |
           echo building $CONTEXT-$ENV
+        env:
+          CONTEXT: ${{ inputs.context }}
+          ENV: ${{ github.env }}
+      - name: deploy
+        if: ${{ inputs.pull_request == false }}
+        run: |
+          echo deploying $CONTEXT-$ENV
         env:
           CONTEXT: ${{ inputs.context }}
           ENV: ${{ github.env }}
@@ -45,4 +64,11 @@ jobs:
           echo building $CONTEXT-$ENV
         env:
           CONTEXT: ${{ inputs.context == true }}
+          ENV: ${{ github.env }}
+      - name: deploy
+        if: ${{ inputs.pull_request == false }}
+        run: |
+          echo deploying $CONTEXT-$ENV
+        env:
+          CONTEXT: ${{ inputs.context }}
           ENV: ${{ github.env }}
