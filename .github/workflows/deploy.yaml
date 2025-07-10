@@ -18,36 +18,35 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
-      shared: ${{ steps.changes.outputs.shared }}
       frontend-a: ${{ steps.changes.outputs.frontend-a }}
       frontend-b: ${{ steps.changes.outputs.frontend-b }}
       backend: ${{ steps.changes.outputs.backend }}
     steps:
       - uses: actions/checkout@v4
-      # - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
-      #   if: github.event_name != 'release'
-      #   id: changes
-      #   with:
-      #     filters: |
-      #       shared:
-      #         - 'shared/*'
-      #       frontend-a:
-      #         - 'shared/frontend-a/**'
-      #       frontend-b:
-      #         - 'shared/frontend-b/**'
-      #       backend:
-      #         - 'backend/**'
-      - name: mock dorny/paths-filter
+      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
+        if: github.event_name != 'release'
         id: changes
-        run: |
-          echo "shared=false" >> "$GITHUB_OUTPUT"
-          echo "frontend-a=false" >> "$GITHUB_OUTPUT"
-          echo "frontend-b=true" >> "$GITHUB_OUTPUT"
-          echo "backend=true" >> "$GITHUB_OUTPUT"
+        with:
+          filters: |
+            frontend-a:
+              - 'shared/frontend-a/**'
+              - 'shared/*'
+            frontend-b:
+              - 'shared/frontend-b/**'
+              - 'shared/*'
+            backend:
+              - 'backend/**'
+          # - name: mock dorny/paths-filter
+          #   id: changes
+          #   run: |
+          #     echo "shared=false" >> "$GITHUB_OUTPUT"
+          #     echo "frontend-a=false" >> "$GITHUB_OUTPUT"
+          #     echo "frontend-b=true" >> "$GITHUB_OUTPUT"
+          #     echo "backend=true" >> "$GITHUB_OUTPUT"
   deploy-frontend-a:
     needs: changes
     uses: ./.github/workflows/reusable-build.yaml
-    if: needs.changes.outputs.frontend-a == 'true' || needs.changes.outputs.shared == 'true' || github.event_name == 'release'
+    if: needs.changes.outputs.frontend-a == 'true' || github.event_name == 'release'
     with:
       context: frontend-a
       release: ${{ github.event_name == 'release' }}
@@ -55,7 +54,7 @@ jobs:
   deploy-frontend-b:
     needs: changes
     uses: ./.github/workflows/reusable-build.yaml
-    if: needs.changes.outputs.frontend-b == 'true' || needs.changes.outputs.shared == 'true' || github.event_name == 'release'
+    if: needs.changes.outputs.frontend-b == 'true' || github.event_name == 'release'
     with:
       context: frontend-b
       release: ${{ github.event_name == 'release' }}
