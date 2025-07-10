@@ -1,7 +1,7 @@
 {
   "frontend-a": "0.0.1",
   "frontend-b": "0.0.1",
-  "shared/frontend-a": "1.0.0"
+  "shared/frontend-a": "1.0.0",
+  "shared/frontend-b": "1.0.0",
   "backend": "0.0.2"
-  "shared/frontend-b": "1.0.0"
 }
