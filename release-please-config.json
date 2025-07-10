@@ -1,0 +1,21 @@
+{
+  "include-component-in-tag": true,
+  "include-v-in-tag": true,
+  "tag-separator": "@",
+  "separate-pull-requests": true,
+  "packages": {
+    "frontent-a": {
+      "path": "shared/frontend-a",
+      "release-type": "simple"
+    },
+    "frontend-b": {
+      "path": "shared/frontend-b",
+      "release-type": "simple"
+    },
+    "backend": {
+      "path": "backend",
+      "release-type": "simple"
+    }
+  },
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
+}
