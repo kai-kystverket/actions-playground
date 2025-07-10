@@ -1,5 +1,6 @@
 {
   "frontend-a": "0.0.1",
   "frontend-b": "0.0.1",
-  "backend": "0.0.1"
+  "backend": "0.0.1",
+  "shared/frontend-b": "1.0.0"
 }
