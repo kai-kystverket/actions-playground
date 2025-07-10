@@ -50,3 +50,9 @@ jobs:
       context: ${{ matrix.service }}
       release: ${{ github.event_name == 'release' }}
       pull_request: ${{ github.event_name == 'pull_request'}}
+  # notify:
+  # needs: deploy
+  # runs-on: ubuntu-latest
+  # if: github.event_name == 'release'
+  # steps:
+  #   - run: echo deploy complete, run notify webhook
