@@ -6,6 +6,11 @@ on:
         description: 'directory to use'
         required: true
         type: string
+      release:
+        description: Release to prod
+        required: true
+        default: false
+        type: boolean
 jobs:
   build-test:
     runs-on: ubuntu-latest
@@ -19,8 +24,8 @@ jobs:
           ENV: ${{ github.env }}
   build-prod:
     runs-on: ubuntu-latest
-    needs: build-test
-    environment: test
+    needs: build-prod
+    environment: prod
     steps:
       - name: build
         run: |
