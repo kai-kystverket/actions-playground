@@ -15,7 +15,7 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
     environment: test
-    if: ${{ inputs.release == 'false' }}
+    if: ${{ inputs.release == false }}
     steps:
       - name: build
         run: |
