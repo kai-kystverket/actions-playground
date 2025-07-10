@@ -40,21 +40,21 @@ jobs:
   deploy-frontend-a:
     needs: changes
     uses: ./.github/workflows/reusable-build.yaml
-    if: needs.changes.outputs.frontend-a == 'true' || needs.changes.outputs.shared == 'true' || ${{ github.event_name == 'release'}}
+    if: needs.changes.outputs.frontend-a == 'true' || needs.changes.outputs.shared == 'true' || ${{ github.event.name == 'release'}}
     with:
       context: frontend-a
       release: ${{ github.event_name == 'release' }}
   deploy-frontend-b:
     needs: changes
     uses: ./.github/workflows/reusable-build.yaml
-    if: needs.changes.outputs.frontend-b == 'true' || needs.changes.outputs.shared == 'true' || ${{ github.event_name == 'release'}}
+    if: needs.changes.outputs.frontend-b == 'true' || needs.changes.outputs.shared == 'true' || ${{ github.event.name == 'release'}}
     with:
       context: frontend-b
       release: ${{ github.event_name == 'release' }}
   deploy-backend:
     needs: changes
     uses: ./.github/workflows/reusable-build.yaml
-    if: needs.changes.outputs.backend == 'true' || ${{ github.event_name == 'release'}}
+    if: needs.changes.outputs.backend == 'true' || ${{ github.event.name == 'release'}}
     with:
       context: backend
       release: ${{ github.event_name == 'release' }}
