@@ -13,6 +13,7 @@ jobs:
       frontend-b: ${{ steps.changes.outputs.frontend-b }}
       backend: ${{ steps.changes.outputs.backend }}
     steps:
+      - uses: actions/checkout@v4
       - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
         id: changes
         with:
