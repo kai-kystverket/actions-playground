@@ -15,7 +15,7 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
     environment: test
-    if: ${{ inputs.release }} != true
+    if: ${{ inputs.release != true }}
     steps:
       - name: build
         run: |
@@ -33,5 +33,5 @@ jobs:
         run: |
           echo building $CONTEXT-$ENV
         env:
-          CONTEXT: ${{ inputs.context }}
+          CONTEXT: ${{ inputs.context == true }}
           ENV: ${{ github.env }}
