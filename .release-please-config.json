@@ -4,7 +4,7 @@
   "tag-separator": "@",
   "separate-pull-requests": true,
   "packages": {
-    "./shared/frontent-a": {
+    "./shared/frontend-a": {
       "package-name": "frontend-a",
       "release-type": "simple"
     },
@@ -13,7 +13,7 @@
       "release-type": "simple"
     },
     "./backend": {
-      "package-name": "frontend-backend",
+      "package-name": "backend",
       "release-type": "simple"
     }
   },
