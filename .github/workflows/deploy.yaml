@@ -27,7 +27,7 @@ jobs:
     with:
       context: frontend-a
   deploy-frontend-b:
-    needs: changes
+    needs: [changes, backend]
     uses: ./.github/workflows/reusable-build.yaml
     if: needs.changes.outputs.frontend-b == 'true' || needs.changes.outputs.shared == 'true'
     with:
