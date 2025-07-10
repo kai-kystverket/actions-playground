@@ -26,14 +26,13 @@ jobs:
               - 'shared/frontend-b/**'
             backend:
               - 'backend/**'
-      - name: mock dorny/paths-filter
-        id: changes-mock
-        run: |
-          echo "shared=true" >> "$GITHUB_OUTPUT"
-          echo "frontend-a=true" >> "$GITHUB_OUTPUT"
-          echo "frontend-b=false" >> "$GITHUB_OUTPUT"
-          echo "backend=false" >> "$GITHUB_OUTPUT"
-          - uses: dorny/paths-filter@v3
+          # - name: mock dorny/paths-filter
+          #   id: changes-mock
+          #   run: |
+          #     echo "shared=true" >> "$GITHUB_OUTPUT"
+          #     echo "frontend-a=true" >> "$GITHUB_OUTPUT"
+          #     echo "frontend-b=false" >> "$GITHUB_OUTPUT"
+          #     echo "backend=false" >> "$GITHUB_OUTPUT"
   deploy-frontend-a:
     needs: changes
     uses: ./.github/workflows/reusable-build.yaml
