@@ -7,11 +7,11 @@ on:
       - shared/**
       - backend/**
   release:
-  #   types:
-  #     - published
+    types:
+      - published
   workflow_dispatch:
 jobs:
-  setup:
+  changes:
     runs-on: ubuntu-latest
     outputs:
       shared: ${{ steps.changes.outputs.shared }}
@@ -41,24 +41,24 @@ jobs:
           #     echo "frontend-b=false" >> "$GITHUB_OUTPUT"
           #     echo "backend=false" >> "$GITHUB_OUTPUT"
   deploy-frontend-a:
-    needs: setup
+    needs: changes
     uses: ./.github/workflows/reusable-build.yaml
-    if: (needs.setup.outputs.frontend-a == 'true' || needs.changes.outputs.shared == 'true') || ${{ github.event_name == 'release' }}
+    if: (needs.changes.outputs.frontend-a == 'true' || needs.changes.outputs.shared == 'true') || ${{ github.event_name == 'release' }}
     with:
       context: frontend-a
       release: ${{ github.event_name == 'release' }}
   deploy-frontend-b:
-    needs: setup
+    needs: changes
     uses: ./.github/workflows/reusable-build.yaml
-    if: (needs.setup.outputs.frontend-b == 'true' || needs.changes.outputs.shared == 'true') || ${{ github.event_name == 'release' }}
+    if: (needs.changes.outputs.frontend-b == 'true' || needs.changes.outputs.shared == 'true') || ${{ github.event_name == 'release' }}
     with:
       context: frontend-b
       release: ${{ github.event_name == 'release' }}
   deploy-backend:
-    needs: setup
+    needs: changes
     uses: ./.github/workflows/reusable-build.yaml
-    # if: needs.setup.outputs.backend == 'true' || ${{ github.event_name == 'release'}}
-    if: needs.setup.outputs.backend == 'true'
+    # if: needs.changes.outputs.backend == 'true' || ${{ github.event_name == 'release'}}
+    if: needs.changes.outputs.backend == 'true'
     with:
       context: backend
       release: ${{ github.event_name == 'release' }}
