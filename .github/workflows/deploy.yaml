@@ -42,7 +42,7 @@ jobs:
           echo changes='["frontend-a","backend"]' >> $GITHUB_OUTPUT
   deploy:
     needs: changes
-    if: ${{ needs.changes.outputs.services != '' && toJson(fromJson(needs.changes.outputs.services)) != '[]' }}
+    if: ${{ needs.changes.outputs.services != '[]' }}
     strategy:
       matrix:
         service: ${{ fromJSON(needs.changes.outputs.services) }}
