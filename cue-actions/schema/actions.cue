@@ -13,11 +13,15 @@ _filter: "filter"
 		jobs: [...#Job]
 	}
 	let C = config
+
 	paths: {
-		// for job in _jobs if job.type == "terraform" {
 		for job in C.jobs {
 			"\(job.name)": [for path in job.paths {path}]
 		}
+	}
+	for job in C.jobs if job.type == "terraform" {
+		reusable_preview_iac: #ReusablePreviewIac
+		reusable_apply_iac:   #ReusableApplyIac
 	}
 
 	pullRequestPaths: list.Concat([
@@ -27,7 +31,6 @@ _filter: "filter"
 	])
 
 	if len(pullRequestPaths) > 0 {
-		reusable_preview_iac: #ReusablePreviewIac
 		pull_request: git.#Workflow & {
 			"on": {
 				pull_request: paths: pullRequestPaths
