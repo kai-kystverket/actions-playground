@@ -5,7 +5,6 @@ name: pull_reqest
       - terraform/*.tf
       - terraform/*.hcl
       - terraform/*.tfvars
-      - frontend/**
 jobs:
   changes:
     name: changes
@@ -25,42 +24,22 @@ jobs:
             frontend:
               - frontend/**
   terraform-preview-dev:
-    if: ${{ filter.changes.outputs.terraform == 'true' }}
+    if: needs.filter.changes.outputs.terraform == 'true'
     name: preview
     needs:
       - filter
-    runs-on: ubuntu-latest
+    uses: ./reusable-apply-iac.yaml
   terraform-preview-test:
-    if: ${{ filter.changes.outputs.terraform == 'true' }}
+    if: needs.filter.changes.outputs.terraform == 'true'
     name: preview
     needs:
       - filter
       - dev
-    runs-on: ubuntu-latest
+    uses: ./reusable-apply-iac.yaml
   terraform-preview-prod:
-    if: ${{ filter.changes.outputs.terraform == 'true' }}
+    if: needs.filter.changes.outputs.terraform == 'true'
     name: preview
     needs:
       - filter
       - test
-    runs-on: ubuntu-latest
-  frontend-build-dev:
-    if: ${{ filter.changes.outputs.frontend == 'true' }}
-    name: build
-    needs:
-      - filter
-    runs-on: ubuntu-latest
-  frontend-build-test:
-    if: ${{ filter.changes.outputs.frontend == 'true' }}
-    name: build
-    needs:
-      - filter
-      - dev
-    runs-on: ubuntu-latest
-  frontend-build-prod:
-    if: ${{ filter.changes.outputs.frontend == 'true' }}
-    name: build
-    needs:
-      - filter
-      - test
-    runs-on: ubuntu-latest
+    uses: ./reusable-apply-iac.yaml

@@ -19,12 +19,12 @@ tf: schema.#Terraform & {
 		prod: _
 	}
 	pull_request: git.#Job & {
-		name:      "preview"
-		"runs-on": "ubuntu-latest"
+		name: "preview"
+		uses: "./reusable-apply-iac.yaml"
 	}
 	deploy: git.#Job & {
-		name:      "deploy"
-		"runs-on": "ubuntu-latest"
+		name: "deploy"
+		uses: "./reusable-apply-iac.yaml"
 	}
 }
 
@@ -41,10 +41,10 @@ docker: schema.#Docker & {
 		test: _
 		prod: _
 	}
-	pull_request: git.#Job & {
-		name:      "build"
-		"runs-on": "ubuntu-latest"
-	}
+	// 	pull_request: git.#Job & {
+	// 		name:   "build"
+	// 		"uses": "./reusable-test.yaml"
+	// 	}
 }
 
 actions: schema.#SuperDeploy
