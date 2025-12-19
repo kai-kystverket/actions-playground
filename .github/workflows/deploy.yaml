@@ -42,18 +42,37 @@ jobs:
           echo changes='["frontend-a","backend"]' >> $GITHUB_OUTPUT
   deploy:
     needs: changes
-    if: ${{ needs.changes.outputs.services != '[]' }}
-    strategy:
-      matrix:
-        service: ${{ fromJSON(needs.changes.outputs.services) }}
-    uses: ./.github/workflows/reusable-build.yaml
-    with:
-      context: ${{ matrix.service }}
-      release: ${{ github.event_name == 'release' }}
-      pull_request: ${{ github.event_name == 'pull_request'}}
-  # notify:
-  # needs: deploy
-  # runs-on: ubuntu-latest
-  # if: github.event_name == 'release'
-  # steps:
-  #   - run: echo deploy complete, run notify webhook
+    runs-on: ubuntu-latest
+    steps:
+      - name: skip
+        if: false
+        run: echo skip
+      - name: test
+        if: false
+        run: echo test
+  deploy-app:
+    needs:
+      - changes
+      - deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: done
+        run: echo done
+  # deploy:
+  #   needs: changes
+  #   if: ${{ needs.changes.outputs.services != '[]' }}
+  #   strategy:
+  #     matrix:
+  #       service: ${{ fromJSON(needs.changes.outputs.services) }}
+  #       include:
+  #         - service: frontend-a
+  #           context: shared/frontend-a
+  #         - service: frontend-b
+  #           context: shared/frontend-a
+  #         - service: backend
+  #           context: backend/api
+  #   uses: ./.github/workflows/reusable-build.yaml
+  #   with:
+  #     context: ${{ matrix.service }}
+  #     release: ${{ github.event_name == 'release' }}
+  #     pull_request: ${{ github.event_name == 'pull_request'}}
