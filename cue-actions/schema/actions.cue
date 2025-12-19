@@ -27,6 +27,7 @@ _filter: "filter"
 	])
 
 	if len(pullRequestPaths) > 0 {
+		reusable_preview_iac: #ReusablePreviewIac
 		pull_request: git.#Workflow & {
 			"on": {
 				pull_request: paths: pullRequestPaths
