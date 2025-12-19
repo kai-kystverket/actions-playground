@@ -57,7 +57,7 @@ _filter: "filter"
 			for job in C.jobs if job.pull_request != _|_ {
 				for env, requires in job.envs {
 					jobs: "\(job.name)-\(job.pull_request.name)-\(env)": job.pull_request & {
-						if: "${{ \(_filter).changes.outputs.\(job.name) == 'true' }}"
+						if: "needs.\(_filter).changes.outputs.\(job.name) == 'true'"
 						if requires != "" {
 							needs: list.Concat([[_filter], ["\(requires)"]])
 						}
