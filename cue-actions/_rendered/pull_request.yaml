@@ -44,22 +44,22 @@ jobs:
       - filter
       - test
     runs-on: ubuntu-latest
-  frontend-tests-dev:
+  frontend-build-dev:
     if: ${{ filter.changes.outputs.frontend == 'true' }}
-    name: tests
+    name: build
     needs:
       - filter
     runs-on: ubuntu-latest
-  frontend-tests-test:
+  frontend-build-test:
     if: ${{ filter.changes.outputs.frontend == 'true' }}
-    name: tests
+    name: build
     needs:
       - filter
       - dev
     runs-on: ubuntu-latest
-  frontend-tests-prod:
+  frontend-build-prod:
     if: ${{ filter.changes.outputs.frontend == 'true' }}
-    name: tests
+    name: build
     needs:
       - filter
       - test
