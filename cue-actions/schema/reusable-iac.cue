@@ -50,3 +50,47 @@ import (
 		]
 	}
 }
+
+#ReusableApplyIac: git.#Workflow & {
+	name: "reusable Apply Infrastructure"
+	on: workflow_call: inputs: {
+		"github-environment": {
+			required: true
+			type:     "string"
+		}
+		"tf-workspace": {
+			required: false
+			type:     "string"
+		}
+		"tf-varfile": {
+			required: false
+			type:     "string"
+		}
+		"tf-path": {
+			required: false
+			type:     "string"
+			default:  "terraform"
+		}
+	}
+	permissions: {
+		"id-token": "write"
+		contents:   "read"
+	}
+	jobs: terraform: {
+		"runs-on":         "ubuntu-latest"
+		"timeout-minutes": 15
+		environment:       "${{ inputs.github-environment }}"
+		steps: [
+			{
+				name:  "fake apply"
+				shell: "bash"
+				run: """
+					echo terraform-workspace: ${{ inputs.tf-workspace }}
+					echo variable-file: ${{ inputs.tf-varfile }}
+					echo working-directory: ${{ inputs.tf-path}}
+					echo READ_PACKAGES: ${{ secrets.READ_PACKAGES }}
+					"""
+			},
+		]
+	}
+}
