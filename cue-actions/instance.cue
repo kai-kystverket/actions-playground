@@ -42,7 +42,7 @@ docker: schema.#Docker & {
 		prod: _
 	}
 	pull_request: git.#Job & {
-		name:      "tests"
+		name:      "build"
 		"runs-on": "ubuntu-latest"
 	}
 }
