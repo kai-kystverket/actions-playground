@@ -1,0 +1,10 @@
+[private]
+default:
+ @just --list -u
+
+dump NAME EXPRESSION: 
+  cue eval -e {{EXPRESSION}} --out yaml > _rendered/{{NAME}}.yaml
+
+render:
+  -@rm _rendered/*.yaml
+  @just dump pull_request actions.pull_request

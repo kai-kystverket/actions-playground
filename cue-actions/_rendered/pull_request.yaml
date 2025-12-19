@@ -1,0 +1,66 @@
+name: pull_reqest
+"on":
+  pull_request:
+    paths:
+      - terraform/*.tf
+      - terraform/*.hcl
+      - terraform/*.tfvars
+      - frontend/**
+jobs:
+  changes:
+    name: changes
+    runs-on: ubuntu-latest
+    outputs:
+      changes: ${{ steps.filter.outputs.changes }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
+        id: filter
+        with:
+          filters: |
+            terraform:
+              - terraform/*.tf
+              - terraform/*.hcl
+              - terraform/*.tfvars
+            frontend:
+              - frontend/**
+  terraform-preview-dev:
+    if: ${{ filter.changes.outputs.terraform == 'true' }}
+    name: preview
+    needs:
+      - filter
+    runs-on: ubuntu-latest
+  terraform-preview-test:
+    if: ${{ filter.changes.outputs.terraform == 'true' }}
+    name: preview
+    needs:
+      - filter
+      - dev
+    runs-on: ubuntu-latest
+  terraform-preview-prod:
+    if: ${{ filter.changes.outputs.terraform == 'true' }}
+    name: preview
+    needs:
+      - filter
+      - test
+    runs-on: ubuntu-latest
+  frontend-tests-dev:
+    if: ${{ filter.changes.outputs.frontend == 'true' }}
+    name: tests
+    needs:
+      - filter
+    runs-on: ubuntu-latest
+  frontend-tests-test:
+    if: ${{ filter.changes.outputs.frontend == 'true' }}
+    name: tests
+    needs:
+      - filter
+      - dev
+    runs-on: ubuntu-latest
+  frontend-tests-prod:
+    if: ${{ filter.changes.outputs.frontend == 'true' }}
+    name: tests
+    needs:
+      - filter
+      - test
+    runs-on: ubuntu-latest
