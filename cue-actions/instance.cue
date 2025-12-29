@@ -13,7 +13,7 @@ actions: "my-repo": schema.#SuperDeploy & {
 		frontend~(fl,_): schema.#Docker & {
 			name: fl
 			paths: [
-				"frontend/**",
+				fl + "/**",
 			]
 			deploy: {
 				"resource-group-name": "test"

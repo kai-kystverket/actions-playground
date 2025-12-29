@@ -26,11 +26,19 @@ _filter: "filter"
 		])
 	}
 
+	// Create reusable terraform actions
 	for job in C.jobs if job.type == "terraform" {
-		reusable_preview_iac: #ReusablePreviewIac
-		reusable_apply_iac:   #ReusableApplyIac
+		"\(_reusablePreviewIac)": #ReusablePreviewIac
+		"\(_reusableApplyIac)":   #ReusableApplyIac
 	}
 
+	//
+	// // create reusable docker actions
+	// for job in C.jobs if job.type == "docker" {
+	// 	reusable_preview_iac: #ReusablePreviewIac
+	// 	reusable_apply_iac:   #ReusableApplyIac
+	// }
+	//
 	if len(C.pullRequestPaths) > 0 {
 		pull_request: git.#Workflow & {
 			"on": {

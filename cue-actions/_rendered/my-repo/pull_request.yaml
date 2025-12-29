@@ -28,18 +28,18 @@ jobs:
     name: preview
     needs:
       - filter
-    uses: ./reusable-apply-iac.yaml
+    uses: ./reusable-preview-iac.yaml
   terraform-preview-test:
     if: needs.filter.changes.outputs.terraform == 'true'
     name: preview
     needs:
       - filter
       - dev
-    uses: ./reusable-apply-iac.yaml
+    uses: ./reusable-preview-iac.yaml
   terraform-preview-prod:
     if: needs.filter.changes.outputs.terraform == 'true'
     name: preview
     needs:
       - filter
       - test
-    uses: ./reusable-apply-iac.yaml
+    uses: ./reusable-preview-iac.yaml
