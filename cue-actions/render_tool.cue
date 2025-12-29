@@ -15,7 +15,7 @@ import (
 command: render: {
 	for repo, superdeploy in actions
 	for name, manifest in superdeploy
-	if manifest.jobs != _|_ {
+	if name != "config" {
 		"\(repo)-\(name)": {
 			dir: file.MkdirAll & {
 				path: "_rendered/\(repo)/"
