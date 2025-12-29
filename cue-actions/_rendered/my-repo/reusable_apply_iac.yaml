@@ -1,4 +1,4 @@
-name: reusable Preview Infrastructure
+name: reusable Apply Infrastructure
 "on":
   workflow_call:
     inputs:
@@ -21,7 +21,7 @@ jobs:
     timeout-minutes: 15
     environment: ${{ inputs.github-environment }}
     steps:
-      - name: fake preview
+      - name: fake apply
         shell: bash
         run: |-
           echo terraform-workspace: ${{ inputs.tf-workspace }}
@@ -31,4 +31,3 @@ jobs:
 permissions:
   id-token: write
   contents: read
-  pull-requests: write
