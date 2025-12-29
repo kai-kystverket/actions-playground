@@ -47,5 +47,6 @@ docker: schema.#Docker & {
 	// 	}
 }
 
-actions: schema.#SuperDeploy
-actions: config: jobs: [tf, docker]
+actions: "my-repo": schema.#SuperDeploy & {
+	config: jobs: [tf, docker]
+}
