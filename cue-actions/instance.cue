@@ -1,3 +1,4 @@
+@experiment(aliasv2)
 package actions
 
 import (
@@ -7,8 +8,8 @@ import (
 
 actions: "my-repo": schema.#SuperDeploy & {
 	config: jobs: {
-		tftest: schema.#Terraform & {
-			name: "terraform"
+		terraform~(tl,_): schema.#Terraform & {
+			name: tl
 			paths: [
 				"terraform/*.tf",
 				"terraform/*.hcl",
@@ -23,8 +24,8 @@ actions: "my-repo": schema.#SuperDeploy & {
 				uses: "./reusable-apply-iac.yaml"
 			}
 		}
-		frontend: schema.#Docker & {
-			name: "frontend"
+		frontend~(fl,_): schema.#Docker & {
+			name: fl
 			paths: [
 				"frontend/**",
 			]
