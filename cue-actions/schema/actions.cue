@@ -9,31 +9,32 @@ import (
 _filter: "filter"
 
 #SuperDeploy: {
+	let C = config
 	config: {
 		jobs: [...#Job]
-	}
-	let C = config
 
-	paths: {
-		for job in C.jobs {
-			"\(job.name)": [for path in job.paths {path}]
+		paths: {
+			for job in C.jobs {
+				"\(job.name)": [for path in job.paths {path}]
+			}
 		}
+
+		pullRequestPaths: list.Concat([
+			for job in C.jobs if job.pull_request != _|_ {
+				job.paths
+			},
+		])
 	}
+
 	for job in C.jobs if job.type == "terraform" {
 		reusable_preview_iac: #ReusablePreviewIac
 		reusable_apply_iac:   #ReusableApplyIac
 	}
 
-	pullRequestPaths: list.Concat([
-		for job in C.jobs if job.pull_request != _|_ {
-			job.paths
-		},
-	])
-
-	if len(pullRequestPaths) > 0 {
+	if len(C.pullRequestPaths) > 0 {
 		pull_request: git.#Workflow & {
 			"on": {
-				pull_request: paths: pullRequestPaths
+				pull_request: paths: C.pullRequestPaths
 			}
 			name: "pull_reqest"
 			jobs: changes: git.#Job & {
@@ -49,7 +50,7 @@ _filter: "filter"
 						uses: "dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36"
 						id:   _filter
 						with: filters: {
-							yaml.Marshal(paths)
+							yaml.Marshal(C.paths)
 						}
 					},
 				]
