@@ -6,7 +6,4 @@ dump NAME EXPRESSION:
   cue eval -e {{EXPRESSION}} --out yaml > _rendered/{{NAME}}.yaml
 
 render:
-  -@rm _rendered/*.yaml
-  @just dump pull_request actions.pull_request
-  @just dump reusable-preview-iac actions.reusable_preview_iac
-  @just dump reusable-apply-iac actions.reusable_preview_iac
+  cue cmd render

@@ -1,0 +1,44 @@
+jobs:
+  tftest:
+    envs:
+      dev: ""
+      test: dev
+      prod: test
+    name: terraform
+    paths:
+      - terraform/*.tf
+      - terraform/*.hcl
+      - terraform/*.tfvars
+    type: terraform
+    pull_request:
+      name: preview
+      uses: ./reusable-apply-iac.yaml
+    deploy:
+      name: deploy
+      uses: ./reusable-apply-iac.yaml
+  frontend:
+    name: frontend
+    paths:
+      - frontend/**
+    build:
+      containerfile: Dockerfile
+      dockerfile-directory: frontend
+    deploy:
+      container-app-name: frontend
+      resource-group-name: test
+    envs:
+      dev: ""
+      test: dev
+      prod: test
+    type: docker
+paths:
+  terraform:
+    - terraform/*.tf
+    - terraform/*.hcl
+    - terraform/*.tfvars
+  frontend:
+    - frontend/**
+pullRequestPaths:
+  - terraform/*.tf
+  - terraform/*.hcl
+  - terraform/*.tfvars
