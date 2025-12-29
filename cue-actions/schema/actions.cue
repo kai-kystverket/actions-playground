@@ -11,7 +11,7 @@ _filter: "filter"
 #SuperDeploy: {
 	let C = config
 	config: {
-		jobs: [...#Job]
+		jobs: {...}
 
 		paths: {
 			for job in C.jobs {
