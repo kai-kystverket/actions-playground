@@ -58,13 +58,13 @@ import (
 				_changesMap: C.pathsMap
 			}
 			for job in C.jobs if job.main != _|_ {
-				for env, requires in job.envs {
-					jobs: "\(job.name)-\(job.main.name)-\(env)": job.main & {
+				for env in job.envs {
+					jobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {
 						if: "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
-						if requires != "" {
-							needs: list.Concat([[_changesID], ["\(requires)"]])
+						if env.requires != _|_ {
+							needs: list.Concat([[_changesID], ["\(env.requires)"]])
 						}
-						if requires == "" {
+						if env.requires == _|_ {
 							needs: [_changesID]
 						}
 					}
@@ -110,13 +110,13 @@ import (
 				_changesMap: C.pullRequestPathsMap
 			}
 			for job in C.jobs if job.pull_request != _|_ {
-				for env, requires in job.envs {
-					jobs: "\(job.name)-\(job.pull_request.name)-\(env)": job.pull_request & {
+				for env in job.envs {
+					jobs: "\(job.name)-\(job.pull_request.name)-\(env.name)": job.pull_request & {
 						if: "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
-						if requires != "" {
-							needs: list.Concat([[_changesID], ["\(requires)"]])
+						if env.requires != _|_ {
+							needs: list.Concat([[_changesID], ["\(env.requires)"]])
 						}
-						if requires == "" {
+						if env.requires == _|_ {
 							needs: [_changesID]
 						}
 					}
