@@ -1,3 +1,4 @@
+@experiment(aliasv2)
 package schema
 
 import (
@@ -17,10 +18,22 @@ _reusableApplyIac:   "reusable-apply-iac"
 	pull_request: git.#Job & {
 		name: "preview"
 		uses: "./\(_reusablePreviewIac).yaml"
+		with: {
+			// "github-environment": string
+			"tf-workspace": string | *"default"
+			"tf-varfile":   string | *""
+			"tf-path":      string | *"terraform"
+		}
 	}
 	main: git.#Job & {
 		name: "deploy"
 		uses: "./\(_reusableApplyIac).yaml"
+		with: {
+			// "github-environment": string
+			"tf-workspace": string | *"default"
+			"tf-varfile":   string | *""
+			"tf-path":      string | *"terraform"
+		}
 	}
 }
 
