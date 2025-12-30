@@ -10,32 +10,23 @@ import (
 	config: {
 		jobs: {...}
 
-		paths: list.Concat([
-			for job in C.jobs if job.main != _|_ {
-				job.paths
-			},
-		])
-
-		pathsMap: {
-			for job in C.jobs if job.main != _|_ {
-				"\(job.name)": [for path in job.paths {path}]
+		paths: [...string]
+		pullRequestPaths: [...string]
+		for job in C.jobs {
+			if job.main != _|_ {
+				paths: list.Concat([job.paths])
+				pathsMap: "\(job.name)": [for p in job.paths {p}]
+			}
+			if job.pull_request != _|_ {
+				pullRequestPaths: list.Concat([job.paths])
+				pullRequestPathsMap: "\(job.name)": [for p in job.paths {p}]
 			}
 		}
 
-		pullRequestPaths: list.Concat([
-			for job in C.jobs if job.pull_request != _|_ {
-				job.paths
-			},
-		])
-
-		pullRequestPathsMap: {
-			for job in C.jobs if job.pull_request != _|_ {
-				"\(job.name)": [for path in job.paths {path}]
-			}
-		}
-
+		// Generate jobs
 		for job in C.jobs
 		for env in job.envs {
+			// Create main branch jobs
 			if job.main != _|_ {
 				mainJobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {
 					name: "\(job.name)-\(job.main.name)-\(env.name)"
@@ -47,6 +38,7 @@ import (
 						needs: [_changesID]
 					}
 				}
+				//  Create jobs for manual deployment
 				manualJobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {
 					if: "${{ github.event.inputs.workflow == '\(job.name)' && github.event.inputs.env == '\(env.name)' }}"
 					with: "github-environment": env.name
