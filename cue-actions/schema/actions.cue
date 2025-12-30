@@ -5,6 +5,8 @@ import (
 	"list"
 )
 
+// Wraps wokrflows that run on main and pull requests 
+// around a change detection flow
 #SuperDeploy: {
 	let C = config
 	config: {

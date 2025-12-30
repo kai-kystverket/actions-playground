@@ -37,53 +37,7 @@ _reusableApplyIac:   "reusable-apply-iac"
 	}
 }
 
-#ReusablePreviewIac: git.#Workflow & {
-	name: "reusable Preview Infrastructure"
-	on: workflow_call: inputs: {
-		"github-environment": {
-			required: true
-			type:     "string"
-		}
-		"tf-workspace": {
-			required: false
-			type:     "string"
-		}
-		"tf-varfile": {
-			required: false
-			type:     "string"
-		}
-		"tf-path": {
-			required: false
-			type:     "string"
-			default:  "terraform"
-		}
-	}
-	permissions: {
-		"id-token":      "write"
-		contents:        "read"
-		"pull-requests": "write"
-	}
-	jobs: terraform: {
-		"runs-on":         "ubuntu-latest"
-		"timeout-minutes": 15
-		environment:       "${{ inputs.github-environment }}"
-		steps: [
-			{
-				name:  "fake preview"
-				shell: "bash"
-				run: """
-					echo input: terraform-workspace=${{ inputs.tf-workspace }}
-					echo input: variable-file=${{ inputs.tf-varfile }}
-					echo input: working-directory=${{ inputs.tf-path}}
-					echo input: github-environment=${{ inputs.github-environment}}
-					"""
-			},
-		]
-	}
-}
-
-#ReusableApplyIac: git.#Workflow & {
-	name: "reusable Apply Infrastructure"
+#BaseTerraform: git.#Workflow & {
 	on: workflow_call: inputs: {
 		"github-environment": {
 			required: true
@@ -111,17 +65,40 @@ _reusableApplyIac:   "reusable-apply-iac"
 		"runs-on":         "ubuntu-latest"
 		"timeout-minutes": 15
 		environment:       "${{ inputs.github-environment }}"
-		steps: [
-			{
-				name:  "fake apply"
-				shell: "bash"
-				run: """
-					echo input: terraform-workspace=${{ inputs.tf-workspace }}
-					echo input: variable-file=${{ inputs.tf-varfile }}
-					echo input: working-directory=${{ inputs.tf-path}}
-					echo input: github-environment=${{ inputs.github-environment}}
-					"""
-			},
-		]
 	}
+}
+
+#ReusablePreviewIac: #BaseTerraform & {
+	name: "reusable Preview Infrastructure"
+	permissions: {
+		"pull-requests": "write"
+	}
+	jobs: terraform: steps: [
+		{
+			name:  "fake preview"
+			shell: "bash"
+			run: """
+				echo input: terraform-workspace=${{ inputs.tf-workspace }}
+				echo input: variable-file=${{ inputs.tf-varfile }}
+				echo input: working-directory=${{ inputs.tf-path}}
+				echo input: github-environment=${{ inputs.github-environment}}
+				"""
+		},
+	]
+}
+
+#ReusableApplyIac: #BaseTerraform & {
+	name: "reusable Apply Infrastructure"
+	jobs: terraform: steps: [
+		{
+			name:  "fake apply"
+			shell: "bash"
+			run: """
+				echo input: terraform-workspace=${{ inputs.tf-workspace }}
+				echo input: variable-file=${{ inputs.tf-varfile }}
+				echo input: working-directory=${{ inputs.tf-path}}
+				echo input: github-environment=${{ inputs.github-environment}}
+				"""
+		},
+	]
 }
