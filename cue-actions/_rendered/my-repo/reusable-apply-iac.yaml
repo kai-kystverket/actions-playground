@@ -24,10 +24,10 @@ jobs:
       - name: fake apply
         shell: bash
         run: |-
-          echo terraform-workspace: ${{ inputs.tf-workspace }}
-          echo variable-file: ${{ inputs.tf-varfile }}
-          echo working-directory: ${{ inputs.tf-path}}
-          echo READ_PACKAGES: ${{ secrets.READ_PACKAGES }}
+          echo input: terraform-workspace=${{ inputs.tf-workspace }}
+          echo input: variable-file=${{ inputs.tf-varfile }}
+          echo input: working-directory=${{ inputs.tf-path}}
+          echo input: github-environment=${{ inputs.github-environment}}
 permissions:
   id-token: write
   contents: read

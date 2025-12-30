@@ -27,8 +27,8 @@ jobs:
           WORKFLOW: ${{github.event.inputs.workflow}}
           ENV: ${{github.event.inputs.env}}
   terraform-deploy-dev:
-    if: ${{ github.event.inputs.workflow }} == terraform && ${{ github.event.inputs.env }} == 'dev'
-    name: deploy
+    if: ${{ github.event.inputs.workflow == 'terraform' && github.event.inputs.env == 'dev' }}
+    name: terraform-deploy-dev
     uses: ./reusable-apply-iac.yaml
     with:
       github-environment: dev
@@ -36,8 +36,8 @@ jobs:
       tf-varfile: ""
       tf-path: terraform
   terraform-deploy-test:
-    if: ${{ github.event.inputs.workflow }} == terraform && ${{ github.event.inputs.env }} == 'test'
-    name: deploy
+    if: ${{ github.event.inputs.workflow == 'terraform' && github.event.inputs.env == 'test' }}
+    name: terraform-deploy-test
     uses: ./reusable-apply-iac.yaml
     with:
       github-environment: test
@@ -45,8 +45,8 @@ jobs:
       tf-varfile: ""
       tf-path: terraform
   terraform-deploy-prod:
-    if: ${{ github.event.inputs.workflow }} == terraform && ${{ github.event.inputs.env }} == 'prod'
-    name: deploy
+    if: ${{ github.event.inputs.workflow == 'terraform' && github.event.inputs.env == 'prod' }}
+    name: terraform-deploy-prod
     uses: ./reusable-apply-iac.yaml
     with:
       github-environment: prod

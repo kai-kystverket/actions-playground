@@ -23,36 +23,36 @@ jobs:
               - terraform/*.tfvars
   terraform-preview-dev:
     if: needs.filter.changes.outputs.terraform == 'true'
-    name: preview
-    needs:
-      - filter
+    name: terraform-preview-dev
     uses: ./reusable-preview-iac.yaml
     with:
       github-environment: dev
       tf-workspace: default
       tf-varfile: ""
       tf-path: terraform
-  terraform-preview-test:
-    if: needs.filter.changes.outputs.terraform == 'true'
-    name: preview
     needs:
       - filter
-      - dev
+  terraform-preview-test:
+    if: needs.filter.changes.outputs.terraform == 'true'
+    name: terraform-preview-test
     uses: ./reusable-preview-iac.yaml
     with:
       github-environment: test
       tf-workspace: default
       tf-varfile: ""
       tf-path: terraform
-  terraform-preview-prod:
-    if: needs.filter.changes.outputs.terraform == 'true'
-    name: preview
     needs:
       - filter
-      - test
+      - dev
+  terraform-preview-prod:
+    if: needs.filter.changes.outputs.terraform == 'true'
+    name: terraform-preview-prod
     uses: ./reusable-preview-iac.yaml
     with:
       github-environment: prod
       tf-workspace: default
       tf-varfile: ""
       tf-path: terraform
+    needs:
+      - filter
+      - test
