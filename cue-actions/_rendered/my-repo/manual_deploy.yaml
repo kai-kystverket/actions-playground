@@ -1,0 +1,23 @@
+name: manual-deploy
+"on":
+  workflow_dispatch:
+    inputs:
+      collection:
+        description: Workflow to apply
+        required: true
+        type: choice
+        options:
+          - terraform
+      env:
+        description: Workflow to apply
+        required: true
+        type: choice
+        options:
+          - dev
+          - test
+          - prod
+        default: dev
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    name: main

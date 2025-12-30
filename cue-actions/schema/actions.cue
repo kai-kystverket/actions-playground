@@ -58,6 +58,34 @@ import (
 				_changesMap: C.pathsMap
 			}
 		}
+		manual_deploy: git.#Workflow & {
+			name: "manual-deploy"
+			"on": {
+				workflow_dispatch: {
+					inputs: {
+						collection: {
+							description: "Workflow to apply"
+							required:    true
+							type:        "choice"
+							options: [for job in C.jobs if job.main != _|_ {job.name}]
+						}
+						env: {
+							description: "Workflow to apply"
+							required:    true
+							type:        "choice"
+							options: ["dev", "test", "prod"]
+							default: "dev"
+						}
+					}
+				}
+			}
+			jobs: {
+				main: {
+					"runs-on": "ubuntu-latest"
+					name:      "main"
+				}
+			}
+		}
 	}
 	if len(C.pullRequestPaths) > 0 {
 		pull_request: git.#Workflow & {
