@@ -18,14 +18,6 @@ name: manual-deploy
           - prod
         default: dev
 jobs:
-  main:
-    runs-on: ubuntu-latest
-    name: main
-    steps:
-      - run: echo $ENV && echo $WORKFLOW
-        env:
-          WORKFLOW: ${{github.event.inputs.workflow}}
-          ENV: ${{github.event.inputs.env}}
   terraform-deploy-dev:
     if: ${{ github.event.inputs.workflow == 'terraform' && github.event.inputs.env == 'dev' }}
     name: terraform-deploy-dev

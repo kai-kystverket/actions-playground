@@ -93,19 +93,6 @@ import (
 					}
 				}
 			}
-			jobs: {
-				main: {
-					"runs-on": "ubuntu-latest"
-					name:      "main"
-					steps: [{
-						run: "echo $ENV && echo $WORKFLOW"
-						env: {
-							WORKFLOW: "${{github.event.inputs.workflow}}"
-							ENV:      "${{github.event.inputs.env}}"
-						}
-					}]
-				}
-			}
 			for job in C.jobs if job.main != _|_ {
 				for env in job.envs {
 					jobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {
