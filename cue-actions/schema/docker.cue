@@ -20,4 +20,22 @@ import (
 			"container-instance-name"?: string
 		}
 	}
+	// 	deploy_container_app: git.#Workflow.#reusableWorkflowCallJob & {
+	// 		// The name of the container app in Azure Container Apps
+	// 		"container-app-name": string | *name
+	// 		// description: The resource group containing the container app
+	// 		"resource-group-name": string
+	// 	}
+	// 	deploy_container_app_job: git.#Workflow.#reusableWorkflowCallJob & {
+	// 		// The name of the container app in Azure Container Apps
+	// 		"container-app-name": string | *name
+	// 		// description: The resource group containing the container app
+	// 		"resource-group-name": string
+	// 	}
+	// 	deploy_container_app_job_instance: git.#Workflow.#reusableWorkflowCallJob & {
+	// 		// The name of the container app in Azure Container Apps
+	// 		"container-app-name": string | *name
+	// 		// description: The resource group containing the container app
+	// 		"resource-group-name": string
+	// 	}
 }
