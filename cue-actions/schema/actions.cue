@@ -3,18 +3,21 @@ package schema
 import (
 	git "cue.dev/x/githubactions"
 	"list"
-	"encoding/yaml"
 )
-
-_filter: "filter"
 
 #SuperDeploy: {
 	let C = config
 	config: {
 		jobs: {...}
 
-		paths: {
-			for job in C.jobs {
+		paths: list.Concat([
+			for job in C.jobs if job.main != _|_ {
+				job.paths
+			},
+		])
+
+		pathsMap: {
+			for job in C.jobs if job.main != _|_ {
 				"\(job.name)": [for path in job.paths {path}]
 			}
 		}
@@ -24,6 +27,12 @@ _filter: "filter"
 				job.paths
 			},
 		])
+
+		pullRequestPathsMap: {
+			for job in C.jobs if job.pull_request != _|_ {
+				"\(job.name)": [for path in job.paths {path}]
+			}
+		}
 	}
 
 	// Create reusable terraform actions
@@ -39,39 +48,35 @@ _filter: "filter"
 	// 	reusable_apply_iac:   #ReusableApplyIac
 	// }
 	//
+	if len(C.paths) > 0 {
+		main: git.#Workflow & {
+			"on": {
+				push: paths: C.paths
+			}
+			name: "main"
+			jobs: changes: #Changes & {
+				_changesMap: C.pathsMap
+			}
+		}
+	}
 	if len(C.pullRequestPaths) > 0 {
 		pull_request: git.#Workflow & {
 			"on": {
 				pull_request: paths: C.pullRequestPaths
 			}
-			name: "pull_reqest"
-			jobs: changes: git.#Job & {
-				name:      "changes"
-				"runs-on": "ubuntu-latest"
-				outputs:
-					changes: "${{ steps.\(_filter).outputs.changes }}"
-				steps: [
-					{
-						uses: "actions/checkout@v4"
-					},
-					{
-						uses: "dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36"
-						id:   _filter
-						with: filters: {
-							yaml.Marshal(C.paths)
-						}
-					},
-				]
+			name: "pull_request"
+			jobs: changes: #Changes & {
+				_changesMap: C.pullRequestPathsMap
 			}
 			for job in C.jobs if job.pull_request != _|_ {
 				for env, requires in job.envs {
 					jobs: "\(job.name)-\(job.pull_request.name)-\(env)": job.pull_request & {
-						if: "needs.\(_filter).changes.outputs.\(job.name) == 'true'"
+						if: "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
 						if requires != "" {
-							needs: list.Concat([[_filter], ["\(requires)"]])
+							needs: list.Concat([[_changesID], ["\(requires)"]])
 						}
 						if requires == "" {
-							needs: [_filter]
+							needs: [_changesID]
 						}
 					}
 				}

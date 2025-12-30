@@ -18,7 +18,7 @@ _reusableApplyIac:   "reusable-apply-iac"
 		name: "preview"
 		uses: "./\(_reusablePreviewIac).yaml"
 	}
-	deploy: git.#Job & {
+	main: git.#Job & {
 		name: "deploy"
 		uses: "./\(_reusableApplyIac).yaml"
 	}

@@ -1,4 +1,4 @@
-name: pull_reqest
+name: pull_request
 "on":
   pull_request:
     paths:
@@ -13,16 +13,14 @@ jobs:
       changes: ${{ steps.filter.outputs.changes }}
     steps:
       - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
-        id: filter
+      - id: filter
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
         with:
           filters: |
             terraform:
               - terraform/*.tf
               - terraform/*.hcl
               - terraform/*.tfvars
-            frontend:
-              - frontend/**
   terraform-preview-dev:
     if: needs.filter.changes.outputs.terraform == 'true'
     name: preview
