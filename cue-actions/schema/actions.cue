@@ -33,6 +33,40 @@ import (
 				"\(job.name)": [for path in job.paths {path}]
 			}
 		}
+
+		for job in C.jobs
+		for env in job.envs {
+			if job.main != _|_ {
+				mainJobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {
+					name: "\(job.name)-\(job.main.name)-\(env.name)"
+					if:   "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
+					if env.requires != _|_ {
+						needs: list.Concat([[_changesID], ["\(env.requires)"]])
+					}
+					if env.requires == _|_ {
+						needs: [_changesID]
+					}
+				}
+				manualJobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {
+					if: "${{ github.event.inputs.workflow == '\(job.name)' && github.event.inputs.env == '\(env.name)' }}"
+					with: "github-environment": env.name
+					name: "\(job.name)-\(job.main.name)-\(env.name)"
+				}
+			}
+			if job.pull_request != _|_ {
+				pullRequestJobs: "\(job.name)-\(job.pull_request.name)-\(env.name)": job.pull_request & {
+					if: "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
+					with: "github-environment": env.name
+					name: "\(job.name)-\(job.pull_request.name)-\(env.name)"
+					if env.requires != _|_ {
+						needs: list.Concat([[_changesID], ["\(env.requires)"]])
+					}
+					if env.requires == _|_ {
+						needs: [_changesID]
+					}
+				}
+			}
+		}
 	}
 
 	for job in C.jobs {
@@ -57,20 +91,7 @@ import (
 			jobs: changes: #Changes & {
 				_changesMap: C.pathsMap
 			}
-			for job in C.jobs if job.main != _|_ {
-				for env in job.envs {
-					jobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {
-						name: "\(job.name)-\(job.main.name)-\(env.name)"
-						if:   "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
-						if env.requires != _|_ {
-							needs: list.Concat([[_changesID], ["\(env.requires)"]])
-						}
-						if env.requires == _|_ {
-							needs: [_changesID]
-						}
-					}
-				}
-			}
+			jobs: C.mainJobs
 		}
 		manual_deploy: git.#Workflow & {
 			name: "manual-deploy"
@@ -93,15 +114,7 @@ import (
 					}
 				}
 			}
-			for job in C.jobs if job.main != _|_ {
-				for env in job.envs {
-					jobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {
-						if: "${{ github.event.inputs.workflow == '\(job.name)' && github.event.inputs.env == '\(env.name)' }}"
-						with: "github-environment": env.name
-						name: "\(job.name)-\(job.main.name)-\(env.name)"
-					}
-				}
-			}
+			jobs: C.manualJobs
 		}
 	}
 	if len(C.pullRequestPaths) > 0 {
@@ -113,21 +126,7 @@ import (
 			jobs: changes: #Changes & {
 				_changesMap: C.pullRequestPathsMap
 			}
-			for job in C.jobs if job.pull_request != _|_ {
-				for env in job.envs {
-					jobs: "\(job.name)-\(job.pull_request.name)-\(env.name)": job.pull_request & {
-						if: "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
-						with: "github-environment": env.name
-						name: "\(job.name)-\(job.pull_request.name)-\(env.name)"
-						if env.requires != _|_ {
-							needs: list.Concat([[_changesID], ["\(env.requires)"]])
-						}
-						if env.requires == _|_ {
-							needs: [_changesID]
-						}
-					}
-				}
-			}
+			jobs: C.pullRequestJobs
 		}
 	}
 }
