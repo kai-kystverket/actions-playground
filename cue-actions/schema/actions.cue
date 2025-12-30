@@ -35,19 +35,19 @@ import (
 		}
 	}
 
-	// Create reusable terraform actions
-	for job in C.jobs if job.type == "terraform" {
-		"\(_reusablePreviewIac)": #ReusablePreviewIac
-		"\(_reusableApplyIac)":   #ReusableApplyIac
+	for job in C.jobs {
+		// Create reusable terraform actions
+		if job.type == "terraform" {
+			"\(_reusablePreviewIac)": #ReusablePreviewIac
+			"\(_reusableApplyIac)":   #ReusableApplyIac
+		}
+		// // create reusable docker actions
+		// if job.type == "docker" {
+		// 	reusable_preview_iac: #ReusablePreviewIac
+		// 	reusable_apply_iac:   #ReusableApplyIac
+		// }
 	}
 
-	//
-	// // create reusable docker actions
-	// for job in C.jobs if job.type == "docker" {
-	// 	reusable_preview_iac: #ReusablePreviewIac
-	// 	reusable_apply_iac:   #ReusableApplyIac
-	// }
-	//
 	if len(C.paths) > 0 {
 		main: git.#Workflow & {
 			"on": {
@@ -76,7 +76,7 @@ import (
 			"on": {
 				workflow_dispatch: {
 					inputs: {
-						collection: {
+						workflow: {
 							description: "Workflow to apply"
 							required:    true
 							type:        "choice"
@@ -96,6 +96,21 @@ import (
 				main: {
 					"runs-on": "ubuntu-latest"
 					name:      "main"
+					steps: [{
+						run: "echo $ENV && echo $WORKFLOW"
+						env: {
+							WORKFLOW: "${{github.event.inputs.workflow}}"
+							ENV:      "${{github.event.inputs.env}}"
+						}
+					}]
+				}
+			}
+			for job in C.jobs if job.main != _|_ {
+				for env in job.envs {
+					jobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {
+						if: "${{ github.event.inputs.workflow }} == \(job.name) && ${{ github.event.inputs.env }} == '\(env.name)'"
+						with: "github-environment": env.name
+					}
 				}
 			}
 		}
@@ -113,6 +128,7 @@ import (
 				for env in job.envs {
 					jobs: "\(job.name)-\(job.pull_request.name)-\(env.name)": job.pull_request & {
 						if: "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
+						with: "github-environment": env.name
 						if env.requires != _|_ {
 							needs: list.Concat([[_changesID], ["\(env.requires)"]])
 						}

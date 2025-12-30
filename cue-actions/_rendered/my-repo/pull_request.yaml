@@ -27,6 +27,11 @@ jobs:
     needs:
       - filter
     uses: ./reusable-preview-iac.yaml
+    with:
+      github-environment: dev
+      tf-workspace: default
+      tf-varfile: ""
+      tf-path: terraform
   terraform-preview-test:
     if: needs.filter.changes.outputs.terraform == 'true'
     name: preview
@@ -34,6 +39,11 @@ jobs:
       - filter
       - dev
     uses: ./reusable-preview-iac.yaml
+    with:
+      github-environment: test
+      tf-workspace: default
+      tf-varfile: ""
+      tf-path: terraform
   terraform-preview-prod:
     if: needs.filter.changes.outputs.terraform == 'true'
     name: preview
@@ -41,3 +51,8 @@ jobs:
       - filter
       - test
     uses: ./reusable-preview-iac.yaml
+    with:
+      github-environment: prod
+      tf-workspace: default
+      tf-varfile: ""
+      tf-path: terraform

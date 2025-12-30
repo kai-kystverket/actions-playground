@@ -2,7 +2,7 @@ name: manual-deploy
 "on":
   workflow_dispatch:
     inputs:
-      collection:
+      workflow:
         description: Workflow to apply
         required: true
         type: choice
@@ -21,3 +21,35 @@ jobs:
   main:
     runs-on: ubuntu-latest
     name: main
+    steps:
+      - run: echo $ENV && echo $WORKFLOW
+        env:
+          WORKFLOW: ${{github.event.inputs.workflow}}
+          ENV: ${{github.event.inputs.env}}
+  terraform-deploy-dev:
+    if: ${{ github.event.inputs.workflow }} == terraform && ${{ github.event.inputs.env }} == 'dev'
+    name: deploy
+    uses: ./reusable-apply-iac.yaml
+    with:
+      github-environment: dev
+      tf-workspace: default
+      tf-varfile: ""
+      tf-path: terraform
+  terraform-deploy-test:
+    if: ${{ github.event.inputs.workflow }} == terraform && ${{ github.event.inputs.env }} == 'test'
+    name: deploy
+    uses: ./reusable-apply-iac.yaml
+    with:
+      github-environment: test
+      tf-workspace: default
+      tf-varfile: ""
+      tf-path: terraform
+  terraform-deploy-prod:
+    if: ${{ github.event.inputs.workflow }} == terraform && ${{ github.event.inputs.env }} == 'prod'
+    name: deploy
+    uses: ./reusable-apply-iac.yaml
+    with:
+      github-environment: prod
+      tf-workspace: default
+      tf-varfile: ""
+      tf-path: terraform

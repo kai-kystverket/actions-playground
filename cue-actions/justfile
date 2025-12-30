@@ -7,3 +7,8 @@ dump NAME EXPRESSION:
 
 render:
   cue cmd render
+
+[working-directory: "_rendered/my-repo"]
+run:
+  @just render
+  act -W manual_deploy.yaml --input env=dev --input workflow=terraform
