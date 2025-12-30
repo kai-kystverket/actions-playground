@@ -57,6 +57,19 @@ import (
 			jobs: changes: #Changes & {
 				_changesMap: C.pathsMap
 			}
+			for job in C.jobs if job.main != _|_ {
+				for env, requires in job.envs {
+					jobs: "\(job.name)-\(job.main.name)-\(env)": job.main & {
+						if: "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
+						if requires != "" {
+							needs: list.Concat([[_changesID], ["\(requires)"]])
+						}
+						if requires == "" {
+							needs: [_changesID]
+						}
+					}
+				}
+			}
 		}
 		manual_deploy: git.#Workflow & {
 			name: "manual-deploy"
