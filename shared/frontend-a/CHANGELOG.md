@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/kai-kystverket/actions-playground/compare/frontend-a@v1.0.0...frontend-a@v1.0.1) (2025-12-30)
+
+
+### Bug Fixes
+
+* test release ([04ee337](https://github.com/kai-kystverket/actions-playground/commit/04ee337011002283121010b6dfcca41fb5e4d48c))
+
 ## 1.0.0 (2025-07-10)
 
 
