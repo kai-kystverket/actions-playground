@@ -1,6 +1,6 @@
 FROM testbase AS builder
 
-FROM cgr.dev/chainguard/static:latest
+FROM scratch
 
 WORKDIR /app
 
