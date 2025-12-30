@@ -16,7 +16,7 @@ _reusableApplyIac:   "reusable-apply-iac"
 		"terraform/*.tfvars",
 	]
 	pull_request: git.#Job & {
-		name: "preview"
+		name: string | *"preview"
 		uses: "./\(_reusablePreviewIac).yaml"
 		with: {
 			// "github-environment": string
@@ -26,7 +26,7 @@ _reusableApplyIac:   "reusable-apply-iac"
 		}
 	}
 	main: git.#Job & {
-		name: "deploy"
+		name: string | *"deploy"
 		uses: "./\(_reusableApplyIac).yaml"
 		with: {
 			// "github-environment": string
@@ -72,10 +72,10 @@ _reusableApplyIac:   "reusable-apply-iac"
 				name:  "fake preview"
 				shell: "bash"
 				run: """
-					echo terraform-workspace: ${{ inputs.tf-workspace }}
-					echo variable-file: ${{ inputs.tf-varfile }}
-					echo working-directory: ${{ inputs.tf-path}}
-					echo READ_PACKAGES: ${{ secrets.READ_PACKAGES }}
+					echo input: terraform-workspace=${{ inputs.tf-workspace }}
+					echo input: variable-file=${{ inputs.tf-varfile }}
+					echo input: working-directory=${{ inputs.tf-path}}
+					echo input: github-environment=${{ inputs.github-environment}}
 					"""
 			},
 		]
@@ -116,10 +116,10 @@ _reusableApplyIac:   "reusable-apply-iac"
 				name:  "fake apply"
 				shell: "bash"
 				run: """
-					echo terraform-workspace: ${{ inputs.tf-workspace }}
-					echo variable-file: ${{ inputs.tf-varfile }}
-					echo working-directory: ${{ inputs.tf-path}}
-					echo READ_PACKAGES: ${{ secrets.READ_PACKAGES }}
+					echo input: terraform-workspace=${{ inputs.tf-workspace }}
+					echo input: variable-file=${{ inputs.tf-varfile }}
+					echo input: working-directory=${{ inputs.tf-path}}
+					echo input: github-environment=${{ inputs.github-environment}}
 					"""
 			},
 		]

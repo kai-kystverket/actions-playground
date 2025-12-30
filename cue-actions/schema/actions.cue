@@ -60,7 +60,8 @@ import (
 			for job in C.jobs if job.main != _|_ {
 				for env in job.envs {
 					jobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {
-						if: "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
+						name: "\(job.name)-\(job.main.name)-\(env.name)"
+						if:   "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
 						if env.requires != _|_ {
 							needs: list.Concat([[_changesID], ["\(env.requires)"]])
 						}
@@ -108,8 +109,9 @@ import (
 			for job in C.jobs if job.main != _|_ {
 				for env in job.envs {
 					jobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {
-						if: "${{ github.event.inputs.workflow }} == \(job.name) && ${{ github.event.inputs.env }} == '\(env.name)'"
+						if: "${{ github.event.inputs.workflow == '\(job.name)' && github.event.inputs.env == '\(env.name)' }}"
 						with: "github-environment": env.name
+						name: "\(job.name)-\(job.main.name)-\(env.name)"
 					}
 				}
 			}
@@ -129,6 +131,7 @@ import (
 					jobs: "\(job.name)-\(job.pull_request.name)-\(env.name)": job.pull_request & {
 						if: "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
 						with: "github-environment": env.name
+						name: "\(job.name)-\(job.pull_request.name)-\(env.name)"
 						if env.requires != _|_ {
 							needs: list.Concat([[_changesID], ["\(env.requires)"]])
 						}

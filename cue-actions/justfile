@@ -10,5 +10,5 @@ render:
 
 [working-directory: "_rendered/my-repo"]
 run:
-  @just render
+  # @just render
   act -W manual_deploy.yaml --input env=dev --input workflow=terraform
