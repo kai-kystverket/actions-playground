@@ -86,11 +86,12 @@ import (
 			"\(_reusablePreviewIac)": #ReusablePreviewIac
 			"\(_reusableApplyIac)":   #ReusableApplyIac
 		}
-		// // create reusable docker actions
-		// if job.type == "docker" {
-		// 	reusable_preview_iac: #ReusablePreviewIac
-		// 	reusable_apply_iac:   #ReusableApplyIac
-		// }
+
+		// create reusable docker actions
+		if job.type == "docker" {
+			reusable_build:  #ReusableBuild
+			reusable_deploy: #ReusableDeploy
+		}
 	}
 
 	if len(C.paths) > 0 {

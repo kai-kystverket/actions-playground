@@ -1,0 +1,19 @@
+name: reusable build
+"on":
+  workflow_call:
+    inputs:
+      github-environment:
+        required: false
+        type: string
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: ${{ inputs.github-environment }}
+    steps:
+      - name: fake build
+        shell: bash
+        run: echo build
+permissions:
+  contents: read
+  packages: write

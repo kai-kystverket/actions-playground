@@ -27,7 +27,7 @@ jobs:
   frontend-a-build:
     name: frontend-a-build
     if: needs.changes.changes.outputs.frontend-a == 'true'
-    uses: ./build.yaml
+    uses: ./.github/workflows/reusable_build.yaml
     with:
       test: test
   terraform-deploy-dev:
@@ -70,7 +70,7 @@ jobs:
     if: needs.changes.changes.outputs.frontend-a == 'true'
     needs:
       - changes
-    uses: ./deploy.yaml
+    uses: ./.github/workflows/reusable_deploy.yaml
     with:
       github-environment: dev
       test: test
@@ -81,7 +81,7 @@ jobs:
       - changes
       - frontend-a-deploy-dev
       - frontend-a-build
-    uses: ./deploy.yaml
+    uses: ./.github/workflows/reusable_deploy.yaml
     with:
       github-environment: test
       test: test
@@ -92,7 +92,7 @@ jobs:
       - changes
       - frontend-a-deploy-test
       - frontend-a-build
-    uses: ./deploy.yaml
+    uses: ./.github/workflows/reusable_deploy.yaml
     with:
       github-environment: prod
       test: test
