@@ -5,7 +5,7 @@ import (
 	"encoding/yaml"
 )
 
-_changesID: "filter"
+_changesID: "changes"
 
 #Changes: git.#Workflow.#normalJob & {
 	_changesMap: {...}
