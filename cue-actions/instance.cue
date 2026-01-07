@@ -10,10 +10,10 @@ actions: "my-repo": schema.#SuperDeploy & {
 		terraform~(tl,_): schema.#Terraform & {
 			name: tl
 		}
-		frontend~(fl,_): schema.#Docker & {
+		"frontend-a"~(fl,_): schema.#Docker & {
 			name: fl
 			paths: [
-				fl + "/**",
+				"shared/" + fl + "/**",
 			]
 		}
 	}

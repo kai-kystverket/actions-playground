@@ -5,7 +5,7 @@ name: main
       - terraform/*.tf
       - terraform/*.hcl
       - terraform/*.tfvars
-      - frontend/**
+      - shared/frontend-a/**
 jobs:
   changes:
     name: changes
@@ -22,11 +22,11 @@ jobs:
               - terraform/*.tf
               - terraform/*.hcl
               - terraform/*.tfvars
-            frontend:
-              - frontend/**
-  frontend-build:
-    name: frontend-build
-    if: needs.filter.changes.outputs.frontend == 'true'
+            frontend-a:
+              - shared/frontend-a/**
+  frontend-a-build:
+    name: frontend-a-build
+    if: needs.filter.changes.outputs.frontend-a == 'true'
     uses: ./build.yaml
     with:
       test: test
@@ -65,33 +65,33 @@ jobs:
       tf-workspace: default
       tf-varfile: ""
       tf-path: terraform
-  frontend-deploy-dev:
-    name: frontend-deploy-dev
-    if: needs.filter.changes.outputs.frontend == 'true'
+  frontend-a-deploy-dev:
+    name: frontend-a-deploy-dev
+    if: needs.filter.changes.outputs.frontend-a == 'true'
     needs:
       - filter
     uses: ./deploy.yaml
     with:
       github-environment: dev
       test: test
-  frontend-deploy-test:
-    name: frontend-deploy-test
-    if: needs.filter.changes.outputs.frontend == 'true'
+  frontend-a-deploy-test:
+    name: frontend-a-deploy-test
+    if: needs.filter.changes.outputs.frontend-a == 'true'
     needs:
       - filter
-      - frontend-deploy-dev
-      - frontend-build
+      - frontend-a-deploy-dev
+      - frontend-a-build
     uses: ./deploy.yaml
     with:
       github-environment: test
       test: test
-  frontend-deploy-prod:
-    name: frontend-deploy-prod
-    if: needs.filter.changes.outputs.frontend == 'true'
+  frontend-a-deploy-prod:
+    name: frontend-a-deploy-prod
+    if: needs.filter.changes.outputs.frontend-a == 'true'
     needs:
       - filter
-      - frontend-deploy-test
-      - frontend-build
+      - frontend-a-deploy-test
+      - frontend-a-build
     uses: ./deploy.yaml
     with:
       github-environment: prod
