@@ -12,51 +12,68 @@ import (
 	config: {
 		jobs: {...}
 
-		paths: [...string]
-		pullRequestPaths: [...string]
 		for job in C.jobs {
 			if job.main != _|_ {
-				paths: list.Concat([job.paths])
 				pathsMap: "\(job.name)": [for p in job.paths {p}]
+				paths: list.Concat([for l in pathsMap {l}])
 			}
 			if job.pull_request != _|_ {
-				pullRequestPaths: list.Concat([job.paths])
 				pullRequestPathsMap: "\(job.name)": [for p in job.paths {p}]
+				pullRequestPaths: list.Concat([for l in pullRequestPathsMap {l}])
 			}
 		}
 
+		paths: [...string]
+		pullRequestPaths: [...string]
+		// paths: list.Concat([for l in pathsMap {l}])
+		// pullRequestPaths: list.Concat([for l in C.pullRequestPathsMap {l}])
+
 		// Generate jobs
-		for job in C.jobs
-		for env in job.envs {
-			// Create main branch jobs
-			if job.main != _|_ {
-				mainJobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {
-					name: "\(job.name)-\(job.main.name)-\(env.name)"
+		for job in C.jobs {
+			if job.build != _|_ {
+				build: "\(job.name)-\(job.build.name)": job.build & {
+					name: "\(job.name)-\(job.build.name)"
 					if:   "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
-					if env.requires != _|_ {
-						needs: list.Concat([[_changesID], ["\(env.requires)"]])
-					}
-					if env.requires == _|_ {
-						needs: [_changesID]
-					}
-				}
-				//  Create jobs for manual deployment
-				manualJobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {
-					if: "${{ github.event.inputs.workflow == '\(job.name)' && github.event.inputs.env == '\(env.name)' }}"
-					with: "github-environment": env.name
-					name: "\(job.name)-\(job.main.name)-\(env.name)"
 				}
 			}
-			if job.pull_request != _|_ {
-				pullRequestJobs: "\(job.name)-\(job.pull_request.name)-\(env.name)": job.pull_request & {
-					if: "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
-					with: "github-environment": env.name
-					name: "\(job.name)-\(job.pull_request.name)-\(env.name)"
-					if env.requires != _|_ {
-						needs: list.Concat([[_changesID], ["\(env.requires)"]])
+			for env in job.envs {
+				// Create main branch jobs
+				if job.main != _|_ {
+					mainJobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {
+						name: "\(job.name)-\(job.main.name)-\(env.name)"
+						// id:   "\(job.name)-\(job.main.name)-\(env.name)"
+						if: "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
+						with: "github-environment": env.name
+						if env.requires != _|_ {
+							if job.build == _|_ {
+								needs: list.Concat([[_changesID], ["\(job.name)-\(job.main.name)-\(env.requires)"]])
+							}
+							if job.build != _|_ {
+								needs: list.Concat([[_changesID], ["\(job.name)-\(job.main.name)-\(env.requires)"], ["\(job.name)-\(job.build.name)"]])
+							}
+						}
+						if env.requires == _|_ {
+							needs: [_changesID]
+						}
 					}
-					if env.requires == _|_ {
-						needs: [_changesID]
+					//  Create jobs for manual deployment
+					manualJobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {
+						if: "${{ github.event.inputs.workflow == '\(job.name)' && github.event.inputs.env == '\(env.name)' }}"
+						with: "github-environment": env.name
+						name: "\(job.name)-\(job.main.name)-\(env.name)"
+					}
+				}
+				if job.pull_request != _|_ {
+					pullRequestJobs: "\(job.name)-\(job.pull_request.name)-\(env.name)": job.pull_request & {
+						if: "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
+						with: "github-environment": env.name
+						name: "\(job.name)-\(job.pull_request.name)-\(env.name)"
+						if env.requires != _|_ {
+							needs: list.Concat([[_changesID], ["\(env.requires)"]])
+						}
+						if env.requires == _|_ {
+							needs: [_changesID]
+						}
 					}
 				}
 			}
@@ -85,6 +102,7 @@ import (
 			jobs: changes: #Changes & {
 				_changesMap: C.pathsMap
 			}
+			jobs: C.build
 			jobs: C.mainJobs
 		}
 		manual_deploy: git.#Workflow & {

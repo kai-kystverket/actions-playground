@@ -15,13 +15,6 @@ actions: "my-repo": schema.#SuperDeploy & {
 			paths: [
 				fl + "/**",
 			]
-			deploy: {
-				"resource-group-name": "test"
-			}
-			// 	pull_request: git.#Job & {
-			// 		name:   "build"
-			// 		"uses": "./reusable-test.yaml"
-			// 	}
 		}
 	}
 }

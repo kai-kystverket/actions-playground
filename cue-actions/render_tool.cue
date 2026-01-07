@@ -22,7 +22,8 @@ command: render: {
 				$dep: remove.$done
 			}
 			render: file.Create & {
-				filename: "_rendered/\(repo)/\(name).yaml"
+				// filename: "_rendered/\(repo)/\(name).yaml"
+				filename: "../.github/workflows/\(name).yaml"
 				contents: yaml.Marshal(manifest)
 				$dep:     dir.$done
 			}

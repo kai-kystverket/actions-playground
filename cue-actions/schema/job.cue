@@ -24,8 +24,12 @@ import (
 		},
 	]
 
-	type:          "docker" | "terraform"
+	type: "docker" | "terraform"
+	// Runs on pull reuqests
 	pull_request?: git.#Job
-	main?:         git.#Job
+	// Runs on main branch for each environment
+	deploy?: git.#Job
+	// Runs before deploy
+	build?: git.#Job
 	...
 }

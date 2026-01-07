@@ -5,6 +5,7 @@ name: main
       - terraform/*.tf
       - terraform/*.hcl
       - terraform/*.tfvars
+      - frontend/**
 jobs:
   changes:
     name: changes
@@ -21,6 +22,14 @@ jobs:
               - terraform/*.tf
               - terraform/*.hcl
               - terraform/*.tfvars
+            frontend:
+              - frontend/**
+  frontend-build:
+    name: frontend-build
+    if: needs.filter.changes.outputs.frontend == 'true'
+    uses: ./build.yaml
+    with:
+      test: test
   terraform-deploy-dev:
     name: terraform-deploy-dev
     if: needs.filter.changes.outputs.terraform == 'true'
@@ -28,6 +37,7 @@ jobs:
       - filter
     uses: ./reusable-apply-iac.yaml
     with:
+      github-environment: dev
       tf-workspace: default
       tf-varfile: ""
       tf-path: terraform
@@ -36,9 +46,10 @@ jobs:
     if: needs.filter.changes.outputs.terraform == 'true'
     needs:
       - filter
-      - dev
+      - terraform-deploy-dev
     uses: ./reusable-apply-iac.yaml
     with:
+      github-environment: test
       tf-workspace: default
       tf-varfile: ""
       tf-path: terraform
@@ -47,9 +58,41 @@ jobs:
     if: needs.filter.changes.outputs.terraform == 'true'
     needs:
       - filter
-      - test
+      - terraform-deploy-test
     uses: ./reusable-apply-iac.yaml
     with:
+      github-environment: prod
       tf-workspace: default
       tf-varfile: ""
       tf-path: terraform
+  frontend-deploy-dev:
+    name: frontend-deploy-dev
+    if: needs.filter.changes.outputs.frontend == 'true'
+    needs:
+      - filter
+    uses: ./deploy.yaml
+    with:
+      github-environment: dev
+      test: test
+  frontend-deploy-test:
+    name: frontend-deploy-test
+    if: needs.filter.changes.outputs.frontend == 'true'
+    needs:
+      - filter
+      - frontend-deploy-dev
+      - frontend-build
+    uses: ./deploy.yaml
+    with:
+      github-environment: test
+      test: test
+  frontend-deploy-prod:
+    name: frontend-deploy-prod
+    if: needs.filter.changes.outputs.frontend == 'true'
+    needs:
+      - filter
+      - frontend-deploy-test
+      - frontend-build
+    uses: ./deploy.yaml
+    with:
+      github-environment: prod
+      test: test

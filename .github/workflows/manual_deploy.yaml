@@ -8,6 +8,7 @@ name: manual-deploy
         type: choice
         options:
           - terraform
+          - frontend
       env:
         description: Workflow to apply
         required: true
@@ -45,3 +46,24 @@ jobs:
       tf-workspace: default
       tf-varfile: ""
       tf-path: terraform
+  frontend-deploy-dev:
+    if: ${{ github.event.inputs.workflow == 'frontend' && github.event.inputs.env == 'dev' }}
+    name: frontend-deploy-dev
+    uses: ./deploy.yaml
+    with:
+      github-environment: dev
+      test: test
+  frontend-deploy-test:
+    if: ${{ github.event.inputs.workflow == 'frontend' && github.event.inputs.env == 'test' }}
+    name: frontend-deploy-test
+    uses: ./deploy.yaml
+    with:
+      github-environment: test
+      test: test
+  frontend-deploy-prod:
+    if: ${{ github.event.inputs.workflow == 'frontend' && github.event.inputs.env == 'prod' }}
+    name: frontend-deploy-prod
+    uses: ./deploy.yaml
+    with:
+      github-environment: prod
+      test: test
