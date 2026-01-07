@@ -69,7 +69,7 @@ import (
 						with: "github-environment": env.name
 						name: "\(job.name)-\(job.pull_request.name)-\(env.name)"
 						if env.requires != _|_ {
-							needs: list.Concat([[_changesID], ["\(env.requires)"]])
+							needs: list.Concat([[_changesID], ["\(job.name)-\(job.pull_request.name)-\(env.requires)"]])
 						}
 						if env.requires == _|_ {
 							needs: [_changesID]

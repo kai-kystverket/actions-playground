@@ -43,7 +43,7 @@ jobs:
       tf-path: terraform
     needs:
       - changes
-      - dev
+      - terraform-preview-dev
   terraform-preview-prod:
     if: needs.changes.changes.outputs.terraform == 'true'
     name: terraform-preview-prod
@@ -55,4 +55,4 @@ jobs:
       tf-path: terraform
     needs:
       - changes
-      - test
+      - terraform-preview-test
