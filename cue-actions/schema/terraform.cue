@@ -17,7 +17,7 @@ _reusableApplyIac:   "reusable-apply-iac"
 	]
 	pull_request: git.#Job & {
 		name: string | *"preview"
-		uses: "./\(_reusablePreviewIac).yaml"
+		uses: "./.github/workflows/\(_reusablePreviewIac).yaml"
 		with: {
 			// "github-environment": string
 			"tf-workspace": string | *"default"
@@ -27,7 +27,7 @@ _reusableApplyIac:   "reusable-apply-iac"
 	}
 	main: git.#Job & {
 		name: string | *"deploy"
-		uses: "./\(_reusableApplyIac).yaml"
+		uses: "./.github/workflows/\(_reusableApplyIac).yaml"
 		with: {
 			// "github-environment": string
 			"tf-workspace": string | *"default"

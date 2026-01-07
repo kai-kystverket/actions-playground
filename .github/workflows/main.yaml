@@ -35,7 +35,7 @@ jobs:
     if: needs.changes.changes.outputs.terraform == 'true'
     needs:
       - changes
-    uses: ./reusable-apply-iac.yaml
+    uses: ./.github/workflows/reusable-apply-iac.yaml
     with:
       github-environment: dev
       tf-workspace: default
@@ -47,7 +47,7 @@ jobs:
     needs:
       - changes
       - terraform-deploy-dev
-    uses: ./reusable-apply-iac.yaml
+    uses: ./.github/workflows/reusable-apply-iac.yaml
     with:
       github-environment: test
       tf-workspace: default
@@ -59,7 +59,7 @@ jobs:
     needs:
       - changes
       - terraform-deploy-test
-    uses: ./reusable-apply-iac.yaml
+    uses: ./.github/workflows/reusable-apply-iac.yaml
     with:
       github-environment: prod
       tf-workspace: default

@@ -24,7 +24,7 @@ jobs:
   terraform-preview-dev:
     if: needs.changes.changes.outputs.terraform == 'true'
     name: terraform-preview-dev
-    uses: ./reusable-preview-iac.yaml
+    uses: ./.github/workflows/reusable-preview-iac.yaml
     with:
       github-environment: dev
       tf-workspace: default
@@ -35,7 +35,7 @@ jobs:
   terraform-preview-test:
     if: needs.changes.changes.outputs.terraform == 'true'
     name: terraform-preview-test
-    uses: ./reusable-preview-iac.yaml
+    uses: ./.github/workflows/reusable-preview-iac.yaml
     with:
       github-environment: test
       tf-workspace: default
@@ -47,7 +47,7 @@ jobs:
   terraform-preview-prod:
     if: needs.changes.changes.outputs.terraform == 'true'
     name: terraform-preview-prod
-    uses: ./reusable-preview-iac.yaml
+    uses: ./.github/workflows/reusable-preview-iac.yaml
     with:
       github-environment: prod
       tf-workspace: default

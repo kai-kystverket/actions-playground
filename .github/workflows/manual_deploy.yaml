@@ -22,7 +22,7 @@ jobs:
   terraform-deploy-dev:
     if: ${{ github.event.inputs.workflow == 'terraform' && github.event.inputs.env == 'dev' }}
     name: terraform-deploy-dev
-    uses: ./reusable-apply-iac.yaml
+    uses: ./.github/workflows/reusable-apply-iac.yaml
     with:
       github-environment: dev
       tf-workspace: default
@@ -31,7 +31,7 @@ jobs:
   terraform-deploy-test:
     if: ${{ github.event.inputs.workflow == 'terraform' && github.event.inputs.env == 'test' }}
     name: terraform-deploy-test
-    uses: ./reusable-apply-iac.yaml
+    uses: ./.github/workflows/reusable-apply-iac.yaml
     with:
       github-environment: test
       tf-workspace: default
@@ -40,7 +40,7 @@ jobs:
   terraform-deploy-prod:
     if: ${{ github.event.inputs.workflow == 'terraform' && github.event.inputs.env == 'prod' }}
     name: terraform-deploy-prod
-    uses: ./reusable-apply-iac.yaml
+    uses: ./.github/workflows/reusable-apply-iac.yaml
     with:
       github-environment: prod
       tf-workspace: default
