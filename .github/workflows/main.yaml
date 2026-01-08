@@ -11,7 +11,8 @@ jobs:
     name: changes
     runs-on: ubuntu-latest
     outputs:
-      changes: ${{ steps.changes.outputs.changes }}
+      terraform: ${{ steps.changes.outputs.terraform }}
+      frontend-a: ${{ steps.changes.outputs.frontend-a }}
     steps:
       - uses: actions/checkout@v4
       - id: changes
@@ -26,7 +27,7 @@ jobs:
               - shared/frontend-a/**
   frontend-a-build:
     name: frontend-a-build
-    if: ${{needs.changes.outputs.frontend-a == 'true'}}
+    if: ${{needs.changes.outputs.frontend-a == true}}
     needs:
       - changes
     uses: ./.github/workflows/reusable_build.yaml
@@ -49,7 +50,7 @@ jobs:
       tf-path: terraform
   terraform-deploy-test:
     name: terraform-deploy-test
-    if: ${{needs.changes.outputs.terraform == 'true'}}
+    if: ${{needs.changes.outputs.terraform == true}}
     needs:
       - terraform-deploy-dev
     uses: ./.github/workflows/reusable-apply-iac.yaml
@@ -63,7 +64,7 @@ jobs:
       tf-path: terraform
   terraform-deploy-prod:
     name: terraform-deploy-prod
-    if: ${{needs.changes.outputs.terraform == 'true'}}
+    if: ${{needs.changes.outputs.terraform == true}}
     needs:
       - terraform-deploy-test
     uses: ./.github/workflows/reusable-apply-iac.yaml
@@ -77,7 +78,7 @@ jobs:
       tf-path: terraform
   frontend-a-deploy-dev:
     name: frontend-a-deploy-dev
-    if: ${{needs.changes.outputs.frontend-a == 'true'}}
+    if: ${{needs.changes.outputs.frontend-a == true}}
     needs:
       - frontend-a-build
     uses: ./.github/workflows/reusable_deploy.yaml
@@ -88,7 +89,7 @@ jobs:
       github-environment: dev
   frontend-a-deploy-test:
     name: frontend-a-deploy-test
-    if: ${{needs.changes.outputs.frontend-a == 'true'}}
+    if: ${{needs.changes.outputs.frontend-a == true}}
     needs:
       - frontend-a-deploy-dev
       - frontend-a-build
@@ -100,7 +101,7 @@ jobs:
       github-environment: test
   frontend-a-deploy-prod:
     name: frontend-a-deploy-prod
-    if: ${{needs.changes.outputs.frontend-a == 'true'}}
+    if: ${{needs.changes.outputs.frontend-a == true}}
     needs:
       - frontend-a-deploy-test
       - frontend-a-build

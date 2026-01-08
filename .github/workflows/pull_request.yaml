@@ -10,7 +10,7 @@ jobs:
     name: changes
     runs-on: ubuntu-latest
     outputs:
-      changes: ${{ steps.changes.outputs.changes }}
+      terraform: ${{ steps.changes.outputs.terraform }}
     steps:
       - uses: actions/checkout@v4
       - id: changes
@@ -22,7 +22,7 @@ jobs:
               - terraform/*.hcl
               - terraform/*.tfvars
   terraform-preview-dev:
-    if: ${{needs.changes.outputs.terraform == 'true'}}
+    if: ${{needs.changes.outputs.terraform == true}}
     name: terraform-preview-dev
     permissions:
       id-token: write
@@ -37,7 +37,7 @@ jobs:
     needs:
       - changes
   terraform-preview-test:
-    if: ${{needs.changes.outputs.terraform == 'true'}}
+    if: ${{needs.changes.outputs.terraform == true}}
     name: terraform-preview-test
     permissions:
       id-token: write
@@ -52,7 +52,7 @@ jobs:
     needs:
       - terraform-preview-dev
   terraform-preview-prod:
-    if: ${{needs.changes.outputs.terraform == 'true'}}
+    if: ${{needs.changes.outputs.terraform == true}}
     name: terraform-preview-prod
     permissions:
       id-token: write

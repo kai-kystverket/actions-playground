@@ -11,8 +11,11 @@ _changesID: "changes"
 	_changesMap: {...}
 	name:      "changes"
 	"runs-on": "ubuntu-latest"
-	outputs:
-		changes: "${{ steps.\(_changesID).outputs.changes }}"
+	outputs: {
+		for job, _ in _changesMap {
+			"\(job)": "${{ steps.\(_changesID).outputs.\(job) }}"
+		}
+	}
 	steps: [
 		{
 			uses: "actions/checkout@v4"
