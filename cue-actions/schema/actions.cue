@@ -54,7 +54,12 @@ import (
 							}
 						}
 						if env.requires == _|_ {
-							needs: [_changesID]
+							if job.build == _|_ {
+								needs: [_changesID]
+							}
+							if job.build != _|_ {
+								needs: ["\(job.name)-\(job.build.name)"]
+							}
 						}
 					}
 					//  Create jobs for manual deployment

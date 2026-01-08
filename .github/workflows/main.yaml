@@ -76,7 +76,7 @@ jobs:
     name: frontend-a-deploy-dev
     if: needs.changes.changes.outputs.frontend-a == 'true'
     needs:
-      - changes
+      - frontend-a-build
     uses: ./.github/workflows/reusable_deploy.yaml
     permissions:
       packages: write
