@@ -27,9 +27,9 @@ jobs:
   frontend-a-build:
     name: frontend-a-build
     if: needs.changes.changes.outputs.frontend-a == 'true'
+    needs:
+      - changes
     uses: ./.github/workflows/reusable_build.yaml
-    with:
-      test: test
   terraform-deploy-dev:
     name: terraform-deploy-dev
     if: needs.changes.changes.outputs.terraform == 'true'

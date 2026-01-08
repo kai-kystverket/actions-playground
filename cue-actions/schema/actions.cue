@@ -34,6 +34,7 @@ import (
 				build: "\(job.name)-\(job.build.name)": job.build & {
 					name: "\(job.name)-\(job.build.name)"
 					if:   "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
+					needs: [_changesID]
 				}
 			}
 			for env in job.envs {
