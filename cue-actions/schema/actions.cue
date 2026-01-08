@@ -47,10 +47,10 @@ import (
 						with: "github-environment": env.name
 						if env.requires != _|_ {
 							if job.build == _|_ {
-								needs: list.Concat([[_changesID], ["\(job.name)-\(job.main.name)-\(env.requires)"]])
+								needs: ["\(job.name)-\(job.main.name)-\(env.requires)"]
 							}
 							if job.build != _|_ {
-								needs: list.Concat([[_changesID], ["\(job.name)-\(job.main.name)-\(env.requires)"], ["\(job.name)-\(job.build.name)"]])
+								needs: list.Concat([["\(job.name)-\(job.main.name)-\(env.requires)"], ["\(job.name)-\(job.build.name)"]])
 							}
 						}
 						if env.requires == _|_ {
@@ -70,7 +70,7 @@ import (
 						with: "github-environment": env.name
 						name: "\(job.name)-\(job.pull_request.name)-\(env.name)"
 						if env.requires != _|_ {
-							needs: list.Concat([[_changesID], ["\(job.name)-\(job.pull_request.name)-\(env.requires)"]])
+							needs: ["\(job.name)-\(job.pull_request.name)-\(env.requires)"]
 						}
 						if env.requires == _|_ {
 							needs: [_changesID]

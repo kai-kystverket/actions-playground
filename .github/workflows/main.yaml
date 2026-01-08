@@ -48,7 +48,6 @@ jobs:
     name: terraform-deploy-test
     if: needs.changes.changes.outputs.terraform == 'true'
     needs:
-      - changes
       - terraform-deploy-dev
     uses: ./.github/workflows/reusable-apply-iac.yaml
     permissions:
@@ -63,7 +62,6 @@ jobs:
     name: terraform-deploy-prod
     if: needs.changes.changes.outputs.terraform == 'true'
     needs:
-      - changes
       - terraform-deploy-test
     uses: ./.github/workflows/reusable-apply-iac.yaml
     permissions:
@@ -86,7 +84,6 @@ jobs:
     name: frontend-a-deploy-test
     if: needs.changes.changes.outputs.frontend-a == 'true'
     needs:
-      - changes
       - frontend-a-deploy-dev
       - frontend-a-build
     uses: ./.github/workflows/reusable_deploy.yaml
@@ -96,7 +93,6 @@ jobs:
     name: frontend-a-deploy-prod
     if: needs.changes.changes.outputs.frontend-a == 'true'
     needs:
-      - changes
       - frontend-a-deploy-test
       - frontend-a-build
     uses: ./.github/workflows/reusable_deploy.yaml

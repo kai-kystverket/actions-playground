@@ -50,7 +50,6 @@ jobs:
       tf-varfile: ""
       tf-path: terraform
     needs:
-      - changes
       - terraform-preview-dev
   terraform-preview-prod:
     if: needs.changes.changes.outputs.terraform == 'true'
@@ -66,5 +65,4 @@ jobs:
       tf-varfile: ""
       tf-path: terraform
     needs:
-      - changes
       - terraform-preview-test
