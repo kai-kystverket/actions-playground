@@ -63,6 +63,7 @@ jobs:
     uses: ./.github/workflows/reusable_deploy.yaml
     permissions:
       packages: write
+      contents: read
   frontend-a-deploy-test:
     if: ${{ github.event.inputs.workflow == 'frontend-a' && github.event.inputs.env == 'test' }}
     with:
@@ -71,6 +72,7 @@ jobs:
     uses: ./.github/workflows/reusable_deploy.yaml
     permissions:
       packages: write
+      contents: read
   frontend-a-deploy-prod:
     if: ${{ github.event.inputs.workflow == 'frontend-a' && github.event.inputs.env == 'prod' }}
     with:
@@ -79,3 +81,4 @@ jobs:
     uses: ./.github/workflows/reusable_deploy.yaml
     permissions:
       packages: write
+      contents: read

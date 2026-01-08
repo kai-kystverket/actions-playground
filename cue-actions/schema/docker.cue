@@ -13,6 +13,7 @@ import (
 		uses: "./.github/workflows/reusable_build.yaml"
 		permissions: {
 			packages: "write"
+			contents: "read"
 		}
 		// 	with: {
 		// 		"test": "test"
@@ -23,6 +24,7 @@ import (
 		uses: "./.github/workflows/reusable_deploy.yaml"
 		permissions: {
 			packages: "write"
+			contents: "read"
 		}
 		// 	with: {
 		// 		"test": "test"
