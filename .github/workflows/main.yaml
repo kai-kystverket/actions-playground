@@ -35,7 +35,7 @@ jobs:
       contents: read
   terraform-deploy-dev:
     name: terraform-deploy-dev
-    if: "${{needs.changes.outputs.terraform == true}}"
+    if: ${{needs.changes.outputs.terraform == true}}
     needs:
       - changes
     uses: ./.github/workflows/reusable-apply-iac.yaml
