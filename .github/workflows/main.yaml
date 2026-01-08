@@ -36,6 +36,9 @@ jobs:
     needs:
       - changes
     uses: ./.github/workflows/reusable-apply-iac.yaml
+    permissions:
+      id-token: write
+      contents: read
     with:
       github-environment: dev
       tf-workspace: default
@@ -48,6 +51,9 @@ jobs:
       - changes
       - terraform-deploy-dev
     uses: ./.github/workflows/reusable-apply-iac.yaml
+    permissions:
+      id-token: write
+      contents: read
     with:
       github-environment: test
       tf-workspace: default
@@ -60,6 +66,9 @@ jobs:
       - changes
       - terraform-deploy-test
     uses: ./.github/workflows/reusable-apply-iac.yaml
+    permissions:
+      id-token: write
+      contents: read
     with:
       github-environment: prod
       tf-workspace: default

@@ -18,6 +18,11 @@ _reusableApplyIac:   "reusable-apply-iac"
 	pull_request: git.#Job & {
 		name: string | *"preview"
 		uses: "./.github/workflows/\(_reusablePreviewIac).yaml"
+		permissions: {
+			"id-token":      "write"
+			"contents":      "read"
+			"pull-requests": "write"
+		}
 		with: {
 			// "github-environment": string
 			"tf-workspace": string | *"default"
@@ -28,6 +33,10 @@ _reusableApplyIac:   "reusable-apply-iac"
 	main: git.#Job & {
 		name: string | *"deploy"
 		uses: "./.github/workflows/\(_reusableApplyIac).yaml"
+		permissions: {
+			"id-token": "write"
+			"contents": "read"
+		}
 		with: {
 			// "github-environment": string
 			"tf-workspace": string | *"default"

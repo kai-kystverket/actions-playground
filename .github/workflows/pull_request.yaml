@@ -24,6 +24,10 @@ jobs:
   terraform-preview-dev:
     if: needs.changes.changes.outputs.terraform == 'true'
     name: terraform-preview-dev
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
     uses: ./.github/workflows/reusable-preview-iac.yaml
     with:
       github-environment: dev
@@ -35,6 +39,10 @@ jobs:
   terraform-preview-test:
     if: needs.changes.changes.outputs.terraform == 'true'
     name: terraform-preview-test
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
     uses: ./.github/workflows/reusable-preview-iac.yaml
     with:
       github-environment: test
@@ -47,6 +55,10 @@ jobs:
   terraform-preview-prod:
     if: needs.changes.changes.outputs.terraform == 'true'
     name: terraform-preview-prod
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
     uses: ./.github/workflows/reusable-preview-iac.yaml
     with:
       github-environment: prod

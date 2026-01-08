@@ -22,6 +22,9 @@ jobs:
   terraform-deploy-dev:
     if: ${{ github.event.inputs.workflow == 'terraform' && github.event.inputs.env == 'dev' }}
     name: terraform-deploy-dev
+    permissions:
+      id-token: write
+      contents: read
     uses: ./.github/workflows/reusable-apply-iac.yaml
     with:
       github-environment: dev
@@ -31,6 +34,9 @@ jobs:
   terraform-deploy-test:
     if: ${{ github.event.inputs.workflow == 'terraform' && github.event.inputs.env == 'test' }}
     name: terraform-deploy-test
+    permissions:
+      id-token: write
+      contents: read
     uses: ./.github/workflows/reusable-apply-iac.yaml
     with:
       github-environment: test
@@ -40,6 +46,9 @@ jobs:
   terraform-deploy-prod:
     if: ${{ github.event.inputs.workflow == 'terraform' && github.event.inputs.env == 'prod' }}
     name: terraform-deploy-prod
+    permissions:
+      id-token: write
+      contents: read
     uses: ./.github/workflows/reusable-apply-iac.yaml
     with:
       github-environment: prod
