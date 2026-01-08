@@ -57,22 +57,19 @@ jobs:
       tf-path: terraform
   frontend-a-deploy-dev:
     if: ${{ github.event.inputs.workflow == 'frontend-a' && github.event.inputs.env == 'dev' }}
-    name: frontend-a-deploy-dev
-    uses: ./.github/workflows/reusable_deploy.yaml
     with:
       github-environment: dev
-      test: test
+    name: frontend-a-deploy-dev
+    uses: ./.github/workflows/reusable_deploy.yaml
   frontend-a-deploy-test:
     if: ${{ github.event.inputs.workflow == 'frontend-a' && github.event.inputs.env == 'test' }}
-    name: frontend-a-deploy-test
-    uses: ./.github/workflows/reusable_deploy.yaml
     with:
       github-environment: test
-      test: test
+    name: frontend-a-deploy-test
+    uses: ./.github/workflows/reusable_deploy.yaml
   frontend-a-deploy-prod:
     if: ${{ github.event.inputs.workflow == 'frontend-a' && github.event.inputs.env == 'prod' }}
-    name: frontend-a-deploy-prod
-    uses: ./.github/workflows/reusable_deploy.yaml
     with:
       github-environment: prod
-      test: test
+    name: frontend-a-deploy-prod
+    uses: ./.github/workflows/reusable_deploy.yaml

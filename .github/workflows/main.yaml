@@ -82,7 +82,6 @@ jobs:
     uses: ./.github/workflows/reusable_deploy.yaml
     with:
       github-environment: dev
-      test: test
   frontend-a-deploy-test:
     name: frontend-a-deploy-test
     if: needs.changes.changes.outputs.frontend-a == 'true'
@@ -93,7 +92,6 @@ jobs:
     uses: ./.github/workflows/reusable_deploy.yaml
     with:
       github-environment: test
-      test: test
   frontend-a-deploy-prod:
     name: frontend-a-deploy-prod
     if: needs.changes.changes.outputs.frontend-a == 'true'
@@ -104,4 +102,3 @@ jobs:
     uses: ./.github/workflows/reusable_deploy.yaml
     with:
       github-environment: prod
-      test: test

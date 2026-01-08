@@ -18,9 +18,9 @@ import (
 	main: git.#Job & {
 		name: string | *"deploy"
 		uses: "./.github/workflows/reusable_deploy.yaml"
-		with: {
-			"test": "test"
-		}
+		// 	with: {
+		// 		"test": "test"
+		// 	}
 	}
 }
 
