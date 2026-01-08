@@ -33,7 +33,7 @@ import (
 			if job.build != _|_ {
 				build: "\(job.name)-\(job.build.name)": job.build & {
 					name: "\(job.name)-\(job.build.name)"
-					if:   "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
+					if:   "${{needs.\(_changesID).changes.outputs.\(job.name) == 'true'}}"
 					needs: [_changesID]
 				}
 			}
@@ -43,7 +43,7 @@ import (
 					mainJobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {
 						name: "\(job.name)-\(job.main.name)-\(env.name)"
 						// id:   "\(job.name)-\(job.main.name)-\(env.name)"
-						if: "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
+						if: "${{needs.\(_changesID).changes.outputs.\(job.name) == 'true'}}"
 						with: "github-environment": env.name
 						if env.requires != _|_ {
 							if job.build == _|_ {
@@ -71,7 +71,7 @@ import (
 				}
 				if job.pull_request != _|_ {
 					pullRequestJobs: "\(job.name)-\(job.pull_request.name)-\(env.name)": job.pull_request & {
-						if: "needs.\(_changesID).changes.outputs.\(job.name) == 'true'"
+						if: "${{needs.\(_changesID).changes.outputs.\(job.name) == 'true'}}"
 						with: "github-environment": env.name
 						name: "\(job.name)-\(job.pull_request.name)-\(env.name)"
 						if env.requires != _|_ {
