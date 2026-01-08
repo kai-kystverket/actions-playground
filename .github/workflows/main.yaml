@@ -15,8 +15,8 @@ jobs:
       frontend-a: ${{ steps.changes.outputs.frontend-a }}
     steps:
       - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
-        id: changes
+      - id: changes
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
         with:
           filters: |
             terraform:
@@ -50,7 +50,7 @@ jobs:
       tf-path: terraform
   terraform-deploy-test:
     name: terraform-deploy-test
-    if: ${{needs.changes.outputs.terraform == true}}
+    if: ${{needs.changes.outputs.terraform == 'true'}}
     needs:
       - terraform-deploy-dev
     uses: ./.github/workflows/reusable-apply-iac.yaml
@@ -64,7 +64,7 @@ jobs:
       tf-path: terraform
   terraform-deploy-prod:
     name: terraform-deploy-prod
-    if: ${{needs.changes.outputs.terraform == true}}
+    if: ${{needs.changes.outputs.terraform == 'true'}}
     needs:
       - terraform-deploy-test
     uses: ./.github/workflows/reusable-apply-iac.yaml
@@ -78,7 +78,7 @@ jobs:
       tf-path: terraform
   frontend-a-deploy-dev:
     name: frontend-a-deploy-dev
-    if: ${{needs.changes.outputs.frontend-a == true}}
+    if: ${{needs.changes.outputs.frontend-a == 'true'}}
     needs:
       - frontend-a-build
     uses: ./.github/workflows/reusable_deploy.yaml
@@ -89,7 +89,7 @@ jobs:
       github-environment: dev
   frontend-a-deploy-test:
     name: frontend-a-deploy-test
-    if: ${{needs.changes.outputs.frontend-a == true}}
+    if: ${{needs.changes.outputs.frontend-a == 'true'}}
     needs:
       - frontend-a-deploy-dev
       - frontend-a-build
@@ -101,7 +101,7 @@ jobs:
       github-environment: test
   frontend-a-deploy-prod:
     name: frontend-a-deploy-prod
-    if: ${{needs.changes.outputs.frontend-a == true}}
+    if: ${{needs.changes.outputs.frontend-a == 'true'}}
     needs:
       - frontend-a-deploy-test
       - frontend-a-build
