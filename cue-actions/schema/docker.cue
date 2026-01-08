@@ -18,6 +18,9 @@ import (
 	main: git.#Job & {
 		name: string | *"deploy"
 		uses: "./.github/workflows/reusable_deploy.yaml"
+		permissions: {
+			packages: "write"
+		}
 		// 	with: {
 		// 		"test": "test"
 		// 	}

@@ -78,6 +78,8 @@ jobs:
     needs:
       - changes
     uses: ./.github/workflows/reusable_deploy.yaml
+    permissions:
+      packages: write
     with:
       github-environment: dev
   frontend-a-deploy-test:
@@ -87,6 +89,8 @@ jobs:
       - frontend-a-deploy-dev
       - frontend-a-build
     uses: ./.github/workflows/reusable_deploy.yaml
+    permissions:
+      packages: write
     with:
       github-environment: test
   frontend-a-deploy-prod:
@@ -96,5 +100,7 @@ jobs:
       - frontend-a-deploy-test
       - frontend-a-build
     uses: ./.github/workflows/reusable_deploy.yaml
+    permissions:
+      packages: write
     with:
       github-environment: prod
