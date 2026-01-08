@@ -8,3 +8,7 @@ act EVENT="push":
 release EVENT="push":
   @act {{EVENT}} -e event.json  -W .github/workflows/release-please.yaml -s GITHUB_TOKEN="$(gh auth token)"
 
+trigger-ci:
+  echo "" >> shared/frontend-a/Dockerfile
+  echo "" >> terraform/test
+
