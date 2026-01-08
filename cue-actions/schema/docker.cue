@@ -11,6 +11,9 @@ import (
 	build: git.#Job & {
 		name: string | *"build"
 		uses: "./.github/workflows/reusable_build.yaml"
+		permissions: {
+			packages: "write"
+		}
 		// 	with: {
 		// 		"test": "test"
 		// 	}

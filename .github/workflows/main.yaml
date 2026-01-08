@@ -30,6 +30,8 @@ jobs:
     needs:
       - changes
     uses: ./.github/workflows/reusable_build.yaml
+    permissions:
+      packages: write
   terraform-deploy-dev:
     name: terraform-deploy-dev
     if: needs.changes.changes.outputs.terraform == 'true'
