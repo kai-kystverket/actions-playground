@@ -15,7 +15,7 @@ _reusableApplyIac:   "reusable-apply-iac"
 		"terraform/*.hcl",
 		"terraform/*.tfvars",
 	]
-	pull_request: git.#Job & {
+	pullRequest: git.#Job & {
 		name:        string | *"preview"
 		uses:        "./.github/workflows/\(_reusablePreviewIac).yaml"
 		permissions: #ReusableTerraformPreview.permissions

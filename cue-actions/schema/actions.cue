@@ -20,7 +20,7 @@ import (
 				_pathsMap: "\(job.name)": [for p in job.paths {p}]
 				_paths: list.Concat([for l in _pathsMap {l}])
 			}
-			if job.pull_request != _|_ {
+			if job.pullRequest != _|_ {
 				_pullRequestPathsMap: "\(job.name)": [for p in job.paths {p}]
 				_pullRequestPaths: list.Concat([for l in _pullRequestPathsMap {l}])
 			}
@@ -39,8 +39,7 @@ import (
 					mainJobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {
 						name: "\(job.name)-\(job.main.name)-\(env.name)"
 						if:   "${{needs.\(_changesID).outputs.\(job.name) == 'true'}}"
-						needs: [for need, val in (_needs) {val}]
-						with: "github-environment": env.name
+						if _needs != _|_ {needs: [for need, val in (_needs) {val}]}
 						_needs: {
 							if job.dependsOn != _|_ {for job in job.dependsOn {"\(job.name)": "\(job.name)-\(job.main.name)-\(env.name)"}}
 							if env.requires != _|_ {
@@ -51,22 +50,7 @@ import (
 								if job.build == _|_ {changes: _changesID}
 							}
 						}
-						// 	if env.requires != _|_ {
-						// 		if job.build == _|_ {
-						// 			needs: ["\(job.name)-\(job.main.name)-\(env.requires)"]
-						// 		}
-						// 		if job.build != _|_ {
-						// 			needs: list.Concat([["\(job.name)-\(job.main.name)-\(env.requires)"], ["\(job.name)-\(job.build.name)"]])
-						// 		}
-						// 	}
-						// 	if env.requires == _|_ {
-						// 		if job.build == _|_ {
-						// 			needs: [_changesID]
-						// 		}
-						// 		if job.build != _|_ {
-						// 			needs: ["\(job.name)-\(job.build.name)"]
-						// 		}
-						// 	}
+						with: "github-environment": env.name
 					}
 					//  Create jobs for manual deployment
 					manualJobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {
@@ -75,16 +59,29 @@ import (
 						name: "\(job.name)-\(job.main.name)-\(env.name)"
 					}
 				}
-				if job.pull_request != _|_ {
-					pullRequestJobs: "\(job.name)-\(job.pull_request.name)-\(env.name)": job.pull_request & {
-						if: "${{needs.\(_changesID).outputs.\(job.name) == 'true'}}"
-						with: "github-environment": env.name
-						name: "\(job.name)-\(job.pull_request.name)-\(env.name)"
-						if env.requires != _|_ {
-							needs: ["\(job.name)-\(job.pull_request.name)-\(env.requires)"]
+				if job.pullRequest != _|_ {
+					if job.pullRequestForEachEnv == true {
+						pullRequestJobs: "\(job.name)-\(job.pullRequest.name)-\(env.name)": job.pullRequest & {
+							if:   "${{needs.\(_changesID).outputs.\(job.name) == 'true'}}"
+							name: "\(job.name)-\(job.pullRequest.name)-\(env.name)"
+							if _needs != _|_ {needs: [for need, val in (_needs) {val}]}
+							_needs: {
+								if env.requires != _|_ {
+									requires: "\(job.name)-\(job.pullRequest.name)-\(env.requires)"
+								}
+								if env.requires == _|_ {
+									if job.build != _|_ {build: "\(job.name)-\(job.build.name)"}
+									if job.build == _|_ {changes: _changesID}
+								}
+							}
+							with: "github-environment": env.name
 						}
-						if env.requires == _|_ {
-							needs: [_changesID]
+					}
+					if job.pullRequestForEachEnv == false {
+						pullRequestJobs: "\(job.name)-\(job.pullRequest.name)": job.pullRequest & {
+							if:   "${{needs.\(_changesID).outputs.\(job.name) == 'true'}}"
+							name: "\(job.name)-\(job.pullRequest.name)"
+							needs: ["\(_changesID)"]
 						}
 					}
 				}
@@ -102,8 +99,8 @@ import (
 
 		// create reusable docker actions
 		if job.type == "docker" {
-			reusable_build:  #ReusableDockerBuild
-			reusable_deploy: #ReusableDockerDeploy
+			"reusable-build":  #ReusableDockerBuild
+			"reusable_deploy": #ReusableDockerDeploy
 		}
 	}
 
@@ -123,7 +120,7 @@ import (
 			jobs: C.build
 			jobs: C.mainJobs
 		}
-		manual_deploy: git.#Workflow & {
+		"manual-deploy": git.#Workflow & {
 			name: "manual-deploy"
 			"on": {
 				workflow_dispatch: {
@@ -150,11 +147,11 @@ import (
 
 	// Create pull request job
 	if len(C._pullRequestPaths) > 0 {
-		pull_request: git.#Workflow & {
+		"pull-request": git.#Workflow & {
 			"on": {
 				pull_request: paths: C._pullRequestPaths
 			}
-			name: "pull_request"
+			name: "pullRequest"
 			jobs: changes: #Changes & {
 				_changesMap: C._pullRequestPathsMap
 			}

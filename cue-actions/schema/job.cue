@@ -32,8 +32,10 @@ import (
 
 	// predefined job templates
 	type?: "docker" | "terraform"
-	// Runs on pull reuqests
-	pull_request?: git.#Job
+	// Runs on pull request
+	pullRequest?:          git.#Job
+	pullRequestForEachEnv: bool | *true
+
 	// Runs on main branch for each environment
 	deploy?: git.#Job
 	// Runs before deploy

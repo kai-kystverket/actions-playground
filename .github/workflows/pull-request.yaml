@@ -1,16 +1,20 @@
-name: pull_request
+name: pullRequest
 "on":
   pull_request:
     paths:
       - terraform/*.tf
       - terraform/*.hcl
       - terraform/*.tfvars
+      - shared/frontend-a/**
+      - shared/frontend-b/**
 jobs:
   changes:
     name: changes
     runs-on: ubuntu-latest
     outputs:
       terraform: ${{ steps.changes.outputs.terraform }}
+      frontend-a: ${{ steps.changes.outputs.frontend-a }}
+      frontend-b: ${{ steps.changes.outputs.frontend-b }}
     steps:
       - uses: actions/checkout@v4
       - id: changes
@@ -21,48 +25,70 @@ jobs:
               - terraform/*.tf
               - terraform/*.hcl
               - terraform/*.tfvars
+            frontend-a:
+              - shared/frontend-a/**
+            frontend-b:
+              - shared/frontend-b/**
   terraform-preview-dev:
     if: ${{needs.changes.outputs.terraform == 'true'}}
     name: terraform-preview-dev
+    needs:
+      - changes
+    uses: ./.github/workflows/reusable-preview-iac.yaml
     permissions:
       id-token: write
       contents: read
       pull-requests: write
-    uses: ./.github/workflows/reusable-preview-iac.yaml
     with:
       github-environment: dev
       tf-workspace: default
       tf-varfile: ""
       tf-path: terraform
-    needs:
-      - changes
   terraform-preview-test:
     if: ${{needs.changes.outputs.terraform == 'true'}}
     name: terraform-preview-test
+    needs:
+      - terraform-preview-dev
+    uses: ./.github/workflows/reusable-preview-iac.yaml
     permissions:
       id-token: write
       contents: read
       pull-requests: write
-    uses: ./.github/workflows/reusable-preview-iac.yaml
     with:
       github-environment: test
       tf-workspace: default
       tf-varfile: ""
       tf-path: terraform
-    needs:
-      - terraform-preview-dev
   terraform-preview-prod:
     if: ${{needs.changes.outputs.terraform == 'true'}}
     name: terraform-preview-prod
+    needs:
+      - terraform-preview-test
+    uses: ./.github/workflows/reusable-preview-iac.yaml
     permissions:
       id-token: write
       contents: read
       pull-requests: write
-    uses: ./.github/workflows/reusable-preview-iac.yaml
     with:
       github-environment: prod
       tf-workspace: default
       tf-varfile: ""
       tf-path: terraform
+  frontend-a-build:
+    if: ${{needs.changes.outputs.frontend-a == 'true'}}
+    name: frontend-a-build
     needs:
-      - terraform-preview-test
+      - changes
+    uses: ./.github/workflows/reusable-build.yaml
+    permissions:
+      contents: read
+      packages: write
+  frontend-b-build:
+    if: ${{needs.changes.outputs.frontend-b == 'true'}}
+    name: frontend-b-build
+    needs:
+      - changes
+    uses: ./.github/workflows/reusable-build.yaml
+    permissions:
+      contents: read
+      packages: write

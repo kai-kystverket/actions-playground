@@ -7,10 +7,18 @@ import (
 #Docker: #Job & {
 	name: string
 	type: "docker"
-
 	build: git.#Job & {
 		name:        string | *"build"
-		uses:        "./.github/workflows/reusable_build.yaml"
+		uses:        "./.github/workflows/reusable-build.yaml"
+		permissions: #ReusableDockerBuild.permissions
+		// 	with: {
+		// 		"test": "test"
+		// 	}
+	}
+	pullRequestForEachEnv: false
+	pullRequest: git.#Job & {
+		name:        string | *"build"
+		uses:        "./.github/workflows/reusable-build.yaml"
 		permissions: #ReusableDockerBuild.permissions
 		// 	with: {
 		// 		"test": "test"
@@ -18,7 +26,7 @@ import (
 	}
 	main: git.#Job & {
 		name:        string | *"deploy"
-		uses:        "./.github/workflows/reusable_deploy.yaml"
+		uses:        "./.github/workflows/reusable-deploy.yaml"
 		permissions: #ReusableDockerDeploy.permissions
 		// 	with: {
 		// 		"test": "test"
