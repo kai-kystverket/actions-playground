@@ -40,7 +40,7 @@ jobs:
       contents: read
       pull-requests: write
     with:
-      github-environment: dev
+      github-environment: dev-preview
       tf-workspace: default
       tf-varfile: ""
       tf-path: terraform
@@ -55,7 +55,7 @@ jobs:
       contents: read
       pull-requests: write
     with:
-      github-environment: test
+      github-environment: test-preview
       tf-workspace: default
       tf-varfile: ""
       tf-path: terraform
@@ -70,7 +70,7 @@ jobs:
       contents: read
       pull-requests: write
     with:
-      github-environment: prod
+      github-environment: prod-preview
       tf-workspace: default
       tf-varfile: ""
       tf-path: terraform
