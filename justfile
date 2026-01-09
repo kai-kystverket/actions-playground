@@ -15,3 +15,16 @@ trigger-ci:
   git commit -m "trigger-ci"
   git push
 
+[working-directory: "cue-actions"]
+render:
+  cue cmd render
+
+[working-directory: "cue-actions"]
+dump NAME EXPRESSION: 
+  cue eval -e {{EXPRESSION}} --out yaml > _rendered/{{NAME}}.yaml
+
+[working-directory: "cue-actions/_rendered/my-repo"]
+run:
+  # @just render
+  act -W manual_deploy.yaml --input env=dev --input workflow=terraform
+
