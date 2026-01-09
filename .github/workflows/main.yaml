@@ -7,6 +7,8 @@ name: main
       - terraform/*.tfvars
       - shared/frontend-a/**
       - shared/frontend-b/**
+    branches:
+      - main
 jobs:
   changes:
     name: changes
@@ -48,7 +50,7 @@ jobs:
     if: ${{needs.changes.outputs.frontend-a == 'true'}}
     needs:
       - changes
-    uses: ./.github/workflows/reusable_build.yaml
+    uses: ./.github/workflows/reusable-build.yaml
     permissions:
       contents: read
       packages: write
@@ -71,7 +73,7 @@ jobs:
     if: ${{needs.changes.outputs.frontend-b == 'true'}}
     needs:
       - changes
-    uses: ./.github/workflows/reusable_build.yaml
+    uses: ./.github/workflows/reusable-build.yaml
     permissions:
       contents: read
       packages: write
@@ -94,7 +96,7 @@ jobs:
     if: ${{needs.changes.outputs.frontend-a == 'true'}}
     needs:
       - frontend-a-build
-    uses: ./.github/workflows/reusable_deploy.yaml
+    uses: ./.github/workflows/reusable-deploy.yaml
     permissions:
       contents: read
       id-token: write
@@ -105,8 +107,7 @@ jobs:
     if: ${{needs.changes.outputs.frontend-a == 'true'}}
     needs:
       - frontend-a-deploy-dev
-      - frontend-a-build
-    uses: ./.github/workflows/reusable_deploy.yaml
+    uses: ./.github/workflows/reusable-deploy.yaml
     permissions:
       contents: read
       id-token: write
@@ -117,8 +118,7 @@ jobs:
     if: ${{needs.changes.outputs.frontend-a == 'true'}}
     needs:
       - frontend-a-deploy-test
-      - frontend-a-build
-    uses: ./.github/workflows/reusable_deploy.yaml
+    uses: ./.github/workflows/reusable-deploy.yaml
     permissions:
       contents: read
       id-token: write
@@ -129,7 +129,7 @@ jobs:
     if: ${{needs.changes.outputs.frontend-b == 'true'}}
     needs:
       - frontend-b-build
-    uses: ./.github/workflows/reusable_deploy.yaml
+    uses: ./.github/workflows/reusable-deploy.yaml
     permissions:
       contents: read
       id-token: write
@@ -140,8 +140,7 @@ jobs:
     if: ${{needs.changes.outputs.frontend-b == 'true'}}
     needs:
       - frontend-b-deploy-dev
-      - frontend-b-build
-    uses: ./.github/workflows/reusable_deploy.yaml
+    uses: ./.github/workflows/reusable-deploy.yaml
     permissions:
       contents: read
       id-token: write
@@ -152,8 +151,7 @@ jobs:
     if: ${{needs.changes.outputs.frontend-b == 'true'}}
     needs:
       - frontend-b-deploy-test
-      - frontend-b-build
-    uses: ./.github/workflows/reusable_deploy.yaml
+    uses: ./.github/workflows/reusable-deploy.yaml
     permissions:
       contents: read
       id-token: write
