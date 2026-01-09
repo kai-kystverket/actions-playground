@@ -101,7 +101,10 @@ import (
 	if len(C._paths) > 0 {
 		main: git.#Workflow & {
 			"on": {
-				push: paths: C._paths
+				push: {
+					paths: C._paths
+					branches: ["main"]
+				}
 			}
 			name: "main"
 			jobs: changes: #Changes & {
