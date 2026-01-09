@@ -101,12 +101,3 @@ jobs:
     permissions:
       contents: read
       id-token: write
-  frontend-b-deploy-prod:
-    if: ${{ github.event.inputs.workflow == 'frontend-b' && github.event.inputs.env == 'prod' }}
-    with:
-      github-environment: prod
-    name: frontend-b-deploy-prod
-    uses: ./.github/workflows/reusable-deploy.yaml
-    permissions:
-      contents: read
-      id-token: write

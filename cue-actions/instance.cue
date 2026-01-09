@@ -22,6 +22,12 @@ actions: "my-repo": schema.#SuperDeploy & {
 			paths: [
 				"shared/" + fb + "/**",
 			]
+			envs: [{
+				name: "dev"
+			}, {
+				name:     "test"
+				requires: "dev"
+			}]
 		}
 	}
 }
