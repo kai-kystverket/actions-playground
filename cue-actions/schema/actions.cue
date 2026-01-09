@@ -38,25 +38,34 @@ import (
 				if job.main != _|_ {
 					mainJobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {
 						name: "\(job.name)-\(job.main.name)-\(env.name)"
-						// id:   "\(job.name)-\(job.main.name)-\(env.name)"
-						if: "${{needs.\(_changesID).outputs.\(job.name) == 'true'}}"
+						if:   "${{needs.\(_changesID).outputs.\(job.name) == 'true'}}"
+						needs: [for need, val in (_needs) {val}]
 						with: "github-environment": env.name
-						if env.requires != _|_ {
-							if job.build == _|_ {
-								needs: ["\(job.name)-\(job.main.name)-\(env.requires)"]
+						_needs: {
+							if env.requires != _|_ {
+								requires: "\(job.name)-\(job.main.name)-\(env.requires)"
 							}
-							if job.build != _|_ {
-								needs: list.Concat([["\(job.name)-\(job.main.name)-\(env.requires)"], ["\(job.name)-\(job.build.name)"]])
-							}
-						}
-						if env.requires == _|_ {
-							if job.build == _|_ {
-								needs: [_changesID]
-							}
-							if job.build != _|_ {
-								needs: ["\(job.name)-\(job.build.name)"]
+							if env.requires == _|_ {
+								if job.build != _|_ {build: "\(job.name)-\(job.build.name)"}
+								if job.build == _|_ {changes: _changesID}
 							}
 						}
+						// 	if env.requires != _|_ {
+						// 		if job.build == _|_ {
+						// 			needs: ["\(job.name)-\(job.main.name)-\(env.requires)"]
+						// 		}
+						// 		if job.build != _|_ {
+						// 			needs: list.Concat([["\(job.name)-\(job.main.name)-\(env.requires)"], ["\(job.name)-\(job.build.name)"]])
+						// 		}
+						// 	}
+						// 	if env.requires == _|_ {
+						// 		if job.build == _|_ {
+						// 			needs: [_changesID]
+						// 		}
+						// 		if job.build != _|_ {
+						// 			needs: ["\(job.name)-\(job.build.name)"]
+						// 		}
+						// 	}
 					}
 					//  Create jobs for manual deployment
 					manualJobs: "\(job.name)-\(job.main.name)-\(env.name)": job.main & {

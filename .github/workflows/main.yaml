@@ -107,7 +107,6 @@ jobs:
     if: ${{needs.changes.outputs.frontend-a == 'true'}}
     needs:
       - frontend-a-deploy-dev
-      - frontend-a-build
     uses: ./.github/workflows/reusable_deploy.yaml
     permissions:
       contents: read
@@ -119,7 +118,6 @@ jobs:
     if: ${{needs.changes.outputs.frontend-a == 'true'}}
     needs:
       - frontend-a-deploy-test
-      - frontend-a-build
     uses: ./.github/workflows/reusable_deploy.yaml
     permissions:
       contents: read
@@ -142,7 +140,6 @@ jobs:
     if: ${{needs.changes.outputs.frontend-b == 'true'}}
     needs:
       - frontend-b-deploy-dev
-      - frontend-b-build
     uses: ./.github/workflows/reusable_deploy.yaml
     permissions:
       contents: read
@@ -154,7 +151,6 @@ jobs:
     if: ${{needs.changes.outputs.frontend-b == 'true'}}
     needs:
       - frontend-b-deploy-test
-      - frontend-b-build
     uses: ./.github/workflows/reusable_deploy.yaml
     permissions:
       contents: read
