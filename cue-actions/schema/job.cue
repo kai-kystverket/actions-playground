@@ -27,6 +27,9 @@ import (
 		},
 	]
 
+	// Other jobs that must complete successfully before this job will run
+	dependsOn?: [...string]
+
 	// predefined job templates
 	type?: "docker" | "terraform"
 	// Runs on pull reuqests

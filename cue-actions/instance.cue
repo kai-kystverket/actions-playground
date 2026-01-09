@@ -18,6 +18,7 @@ actions: "my-repo": schema.#SuperDeploy & {
 		}
 		"frontend-b"~(fb,_): schema.#Docker & {
 			name: fb
+			dependsOn: [tl]
 			paths: [
 				"shared/" + fb + "/**",
 			]

@@ -95,7 +95,6 @@ jobs:
     name: frontend-a-deploy-dev
     if: ${{needs.changes.outputs.frontend-a == 'true'}}
     needs:
-      - terraform-deploy-dev
       - frontend-a-build
     uses: ./.github/workflows/reusable_deploy.yaml
     permissions:
@@ -107,7 +106,6 @@ jobs:
     name: frontend-a-deploy-test
     if: ${{needs.changes.outputs.frontend-a == 'true'}}
     needs:
-      - terraform-deploy-test
       - frontend-a-deploy-dev
     uses: ./.github/workflows/reusable_deploy.yaml
     permissions:
@@ -119,7 +117,6 @@ jobs:
     name: frontend-a-deploy-prod
     if: ${{needs.changes.outputs.frontend-a == 'true'}}
     needs:
-      - terraform-deploy-prod
       - frontend-a-deploy-test
     uses: ./.github/workflows/reusable_deploy.yaml
     permissions:
@@ -131,8 +128,8 @@ jobs:
     name: frontend-b-deploy-dev
     if: ${{needs.changes.outputs.frontend-b == 'true'}}
     needs:
-      - terraform-deploy-dev
       - frontend-b-build
+      - terraform
     uses: ./.github/workflows/reusable_deploy.yaml
     permissions:
       contents: read
@@ -143,8 +140,8 @@ jobs:
     name: frontend-b-deploy-test
     if: ${{needs.changes.outputs.frontend-b == 'true'}}
     needs:
-      - terraform-deploy-test
       - frontend-b-deploy-dev
+      - terraform
     uses: ./.github/workflows/reusable_deploy.yaml
     permissions:
       contents: read
@@ -155,8 +152,8 @@ jobs:
     name: frontend-b-deploy-prod
     if: ${{needs.changes.outputs.frontend-b == 'true'}}
     needs:
-      - terraform-deploy-prod
       - frontend-b-deploy-test
+      - terraform
     uses: ./.github/workflows/reusable_deploy.yaml
     permissions:
       contents: read
