@@ -89,8 +89,8 @@ import (
 	for job in C.jobs {
 		// Create reusable terraform actions
 		if job.type == "terraform" {
-			"\(_reusablePreviewIac)": #ReusablePreviewIac
-			"\(_reusableApplyIac)":   #ReusableApplyIac
+			"\(_reusablePreviewIac)": #ReusableTerraformPreview
+			"\(_reusableApplyIac)":   #ReusableTerraformApply
 		}
 
 		// create reusable docker actions

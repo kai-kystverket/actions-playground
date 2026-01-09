@@ -16,13 +16,9 @@ _reusableApplyIac:   "reusable-apply-iac"
 		"terraform/*.tfvars",
 	]
 	pull_request: git.#Job & {
-		name: string | *"preview"
-		uses: "./.github/workflows/\(_reusablePreviewIac).yaml"
-		permissions: {
-			"id-token":      "write"
-			"contents":      "read"
-			"pull-requests": "write"
-		}
+		name:        string | *"preview"
+		uses:        "./.github/workflows/\(_reusablePreviewIac).yaml"
+		permissions: #ReusableTerraformPreview.permissions
 		with: {
 			// "github-environment": string
 			"tf-workspace": string | *"default"
@@ -31,12 +27,9 @@ _reusableApplyIac:   "reusable-apply-iac"
 		}
 	}
 	main: git.#Job & {
-		name: string | *"deploy"
-		uses: "./.github/workflows/\(_reusableApplyIac).yaml"
-		permissions: {
-			"id-token": "write"
-			"contents": "read"
-		}
+		name:        string | *"deploy"
+		uses:        "./.github/workflows/\(_reusableApplyIac).yaml"
+		permissions: #ReusableTerraformApply.permissions
 		with: {
 			// "github-environment": string
 			"tf-workspace": string | *"default"
@@ -77,7 +70,7 @@ _reusableApplyIac:   "reusable-apply-iac"
 	}
 }
 
-#ReusablePreviewIac: #BaseTerraform & {
+#ReusableTerraformPreview: #BaseTerraform & {
 	name: "reusable Preview Infrastructure"
 	permissions: {
 		"pull-requests": "write"
@@ -96,7 +89,7 @@ _reusableApplyIac:   "reusable-apply-iac"
 	]
 }
 
-#ReusableApplyIac: #BaseTerraform & {
+#ReusableTerraformApply: #BaseTerraform & {
 	name: "reusable Apply Infrastructure"
 	jobs: terraform: steps: [
 		{
