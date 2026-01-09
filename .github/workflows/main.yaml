@@ -6,6 +6,7 @@ name: main
       - terraform/*.hcl
       - terraform/*.tfvars
       - shared/frontend-a/**
+      - shared/frontend-b/**
 jobs:
   changes:
     name: changes
@@ -13,6 +14,7 @@ jobs:
     outputs:
       terraform: ${{ steps.changes.outputs.terraform }}
       frontend-a: ${{ steps.changes.outputs.frontend-a }}
+      frontend-b: ${{ steps.changes.outputs.frontend-b }}
     steps:
       - uses: actions/checkout@v4
       - id: changes
@@ -25,15 +27,8 @@ jobs:
               - terraform/*.tfvars
             frontend-a:
               - shared/frontend-a/**
-  frontend-a-build:
-    name: frontend-a-build
-    if: ${{needs.changes.outputs.frontend-a == 'true'}}
-    needs:
-      - changes
-    uses: ./.github/workflows/reusable_build.yaml
-    permissions:
-      contents: read
-      packages: write
+            frontend-b:
+              - shared/frontend-b/**
   terraform-deploy-dev:
     name: terraform-deploy-dev
     if: ${{needs.changes.outputs.terraform == 'true'}}
@@ -48,6 +43,15 @@ jobs:
       tf-workspace: default
       tf-varfile: ""
       tf-path: terraform
+  frontend-a-build:
+    name: frontend-a-build
+    if: ${{needs.changes.outputs.frontend-a == 'true'}}
+    needs:
+      - changes
+    uses: ./.github/workflows/reusable_build.yaml
+    permissions:
+      contents: read
+      packages: write
   terraform-deploy-test:
     name: terraform-deploy-test
     if: ${{needs.changes.outputs.terraform == 'true'}}
@@ -62,6 +66,15 @@ jobs:
       tf-workspace: default
       tf-varfile: ""
       tf-path: terraform
+  frontend-b-build:
+    name: frontend-b-build
+    if: ${{needs.changes.outputs.frontend-b == 'true'}}
+    needs:
+      - changes
+    uses: ./.github/workflows/reusable_build.yaml
+    permissions:
+      contents: read
+      packages: write
   terraform-deploy-prod:
     name: terraform-deploy-prod
     if: ${{needs.changes.outputs.terraform == 'true'}}
@@ -105,6 +118,41 @@ jobs:
     needs:
       - frontend-a-deploy-test
       - frontend-a-build
+    uses: ./.github/workflows/reusable_deploy.yaml
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      github-environment: prod
+  frontend-b-deploy-dev:
+    name: frontend-b-deploy-dev
+    if: ${{needs.changes.outputs.frontend-b == 'true'}}
+    needs:
+      - frontend-b-build
+    uses: ./.github/workflows/reusable_deploy.yaml
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      github-environment: dev
+  frontend-b-deploy-test:
+    name: frontend-b-deploy-test
+    if: ${{needs.changes.outputs.frontend-b == 'true'}}
+    needs:
+      - frontend-b-deploy-dev
+      - frontend-b-build
+    uses: ./.github/workflows/reusable_deploy.yaml
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      github-environment: test
+  frontend-b-deploy-prod:
+    name: frontend-b-deploy-prod
+    if: ${{needs.changes.outputs.frontend-b == 'true'}}
+    needs:
+      - frontend-b-deploy-test
+      - frontend-b-build
     uses: ./.github/workflows/reusable_deploy.yaml
     permissions:
       contents: read

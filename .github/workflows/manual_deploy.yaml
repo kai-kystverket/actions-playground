@@ -9,6 +9,7 @@ name: manual-deploy
         options:
           - terraform
           - frontend-a
+          - frontend-b
       env:
         description: Workflow to apply
         required: true
@@ -78,6 +79,33 @@ jobs:
     with:
       github-environment: prod
     name: frontend-a-deploy-prod
+    uses: ./.github/workflows/reusable_deploy.yaml
+    permissions:
+      contents: read
+      id-token: write
+  frontend-b-deploy-dev:
+    if: ${{ github.event.inputs.workflow == 'frontend-b' && github.event.inputs.env == 'dev' }}
+    with:
+      github-environment: dev
+    name: frontend-b-deploy-dev
+    uses: ./.github/workflows/reusable_deploy.yaml
+    permissions:
+      contents: read
+      id-token: write
+  frontend-b-deploy-test:
+    if: ${{ github.event.inputs.workflow == 'frontend-b' && github.event.inputs.env == 'test' }}
+    with:
+      github-environment: test
+    name: frontend-b-deploy-test
+    uses: ./.github/workflows/reusable_deploy.yaml
+    permissions:
+      contents: read
+      id-token: write
+  frontend-b-deploy-prod:
+    if: ${{ github.event.inputs.workflow == 'frontend-b' && github.event.inputs.env == 'prod' }}
+    with:
+      github-environment: prod
+    name: frontend-b-deploy-prod
     uses: ./.github/workflows/reusable_deploy.yaml
     permissions:
       contents: read
