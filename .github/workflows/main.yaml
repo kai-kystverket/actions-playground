@@ -32,8 +32,8 @@ jobs:
       - changes
     uses: ./.github/workflows/reusable_build.yaml
     permissions:
-      packages: write
       contents: read
+      packages: write
   terraform-deploy-dev:
     name: terraform-deploy-dev
     if: ${{needs.changes.outputs.terraform == 'true'}}
@@ -83,8 +83,8 @@ jobs:
       - frontend-a-build
     uses: ./.github/workflows/reusable_deploy.yaml
     permissions:
-      packages: write
       contents: read
+      id-token: write
     with:
       github-environment: dev
   frontend-a-deploy-test:
@@ -95,8 +95,8 @@ jobs:
       - frontend-a-build
     uses: ./.github/workflows/reusable_deploy.yaml
     permissions:
-      packages: write
       contents: read
+      id-token: write
     with:
       github-environment: test
   frontend-a-deploy-prod:
@@ -107,7 +107,7 @@ jobs:
       - frontend-a-build
     uses: ./.github/workflows/reusable_deploy.yaml
     permissions:
-      packages: write
       contents: read
+      id-token: write
     with:
       github-environment: prod

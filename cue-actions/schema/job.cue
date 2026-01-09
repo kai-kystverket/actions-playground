@@ -5,13 +5,16 @@ import (
 )
 
 #Environments: {
-	name!:     string
-	requires?: string
+	name!: "dev" | "test" | "prod"
+	// Specify which environment should be run first
+	requires?: "dev" | "test" | "prod"
 }
 
 #Job: {
 	name!: string
+	// Paths to trigger CI
 	paths!: [...string]
+	// List over environments to run
 	envs: [...#Environments] | *[
 		{
 			name: "dev"
@@ -24,7 +27,8 @@ import (
 		},
 	]
 
-	type: "docker" | "terraform"
+	// predefined job templates
+	type?: "docker" | "terraform"
 	// Runs on pull reuqests
 	pull_request?: git.#Job
 	// Runs on main branch for each environment

@@ -9,23 +9,17 @@ import (
 	type: "docker"
 
 	build: git.#Job & {
-		name: string | *"build"
-		uses: "./.github/workflows/reusable_build.yaml"
-		permissions: {
-			packages: "write"
-			contents: "read"
-		}
+		name:        string | *"build"
+		uses:        "./.github/workflows/reusable_build.yaml"
+		permissions: #ReusableDockerBuild.permissions
 		// 	with: {
 		// 		"test": "test"
 		// 	}
 	}
 	main: git.#Job & {
-		name: string | *"deploy"
-		uses: "./.github/workflows/reusable_deploy.yaml"
-		permissions: {
-			packages: "write"
-			contents: "read"
-		}
+		name:        string | *"deploy"
+		uses:        "./.github/workflows/reusable_deploy.yaml"
+		permissions: #ReusableDockerDeploy.permissions
 		// 	with: {
 		// 		"test": "test"
 		// 	}
@@ -44,7 +38,7 @@ import (
 	}
 }
 
-#ReusableBuild: #BaseDocker & {
+#ReusableDockerBuild: #BaseDocker & {
 	name: "reusable build"
 	permissions: {
 		packages: "write"
@@ -64,8 +58,11 @@ import (
 		]
 	}
 }
-#ReusableDeploy: #BaseDocker & {
+#ReusableDockerDeploy: #BaseDocker & {
 	name: "reusable deploy"
+	permissions: {
+		"id-token": "write"
+	}
 	jobs: deploy: {
 		"runs-on":         "ubuntu-latest"
 		"timeout-minutes": 15

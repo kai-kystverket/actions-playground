@@ -95,8 +95,8 @@ import (
 
 		// create reusable docker actions
 		if job.type == "docker" {
-			reusable_build:  #ReusableBuild
-			reusable_deploy: #ReusableDeploy
+			reusable_build:  #ReusableDockerBuild
+			reusable_deploy: #ReusableDockerDeploy
 		}
 	}
 

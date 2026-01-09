@@ -7,9 +7,10 @@ import (
 
 _changesID: "changes"
 
+// Conditionally runs workflows based on which paths are modified
 #Changes: git.#Workflow.#normalJob & {
 	_changesMap: {...}
-	name:      "changes"
+	name:      _changesID
 	"runs-on": "ubuntu-latest"
 	outputs: {
 		for job, _ in _changesMap {
