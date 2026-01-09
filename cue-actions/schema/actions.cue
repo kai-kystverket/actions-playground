@@ -74,7 +74,7 @@ import (
 									if job.build == _|_ {changes: _changesID}
 								}
 							}
-							with: "github-environment": env.name
+							with: "github-environment": env.name + "-preview"
 						}
 					}
 					if job.pullRequestForEachEnv == false {
