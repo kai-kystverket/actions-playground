@@ -28,7 +28,7 @@ import (
 	]
 
 	// Other jobs that must complete successfully before this job will run
-	dependsOn?: [...string]
+	dependsOn?: [...#Job]
 
 	// predefined job templates
 	type?: "docker" | "terraform"

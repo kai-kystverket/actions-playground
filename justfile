@@ -10,6 +10,7 @@ release EVENT="push":
 
 trigger-ci:
   echo "" >> shared/frontend-a/Dockerfile
+  echo "" >> shared/frontend-b/Dockerfile
   echo "" >> terraform/test.tf
   git add --all
   git commit -m "trigger-ci"

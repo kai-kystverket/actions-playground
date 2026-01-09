@@ -42,7 +42,7 @@ import (
 						needs: [for need, val in (_needs) {val}]
 						with: "github-environment": env.name
 						_needs: {
-							if job.dependsOn != _|_ {for job in job.dependsOn {"\(job)": "\(job)"}}
+							if job.dependsOn != _|_ {for job in job.dependsOn {"\(job.name)": "\(job.name)-\(job.main.name)-\(env.name)"}}
 							if env.requires != _|_ {
 								requires: "\(job.name)-\(job.main.name)-\(env.requires)"
 							}

@@ -10,7 +10,7 @@ actions: "my-repo": schema.#SuperDeploy & {
 		terraform~(tl,_): schema.#Terraform & {
 			name: tl
 		}
-		"frontend-a"~(fl,_): schema.#Docker & {
+		"frontend-a"~(fl,a): schema.#Docker & {
 			name: fl
 			paths: [
 				"shared/" + fl + "/**",
@@ -18,7 +18,7 @@ actions: "my-repo": schema.#SuperDeploy & {
 		}
 		"frontend-b"~(fb,_): schema.#Docker & {
 			name: fb
-			dependsOn: [tl]
+			dependsOn: [terraform, a]
 			paths: [
 				"shared/" + fb + "/**",
 			]
