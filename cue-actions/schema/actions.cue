@@ -11,25 +11,21 @@ import (
 	let C = config
 	config: {
 		jobs: {...}
+		_paths: [...string]
+		_pullRequestPaths: [...string]
 
 		for job in C.jobs {
+			// Generate paths filters
 			if job.main != _|_ {
-				pathsMap: "\(job.name)": [for p in job.paths {p}]
-				paths: list.Concat([for l in pathsMap {l}])
+				_pathsMap: "\(job.name)": [for p in job.paths {p}]
+				_paths: list.Concat([for l in _pathsMap {l}])
 			}
 			if job.pull_request != _|_ {
-				pullRequestPathsMap: "\(job.name)": [for p in job.paths {p}]
-				pullRequestPaths: list.Concat([for l in pullRequestPathsMap {l}])
+				_pullRequestPathsMap: "\(job.name)": [for p in job.paths {p}]
+				_pullRequestPaths: list.Concat([for l in _pullRequestPathsMap {l}])
 			}
-		}
 
-		paths: [...string]
-		pullRequestPaths: [...string]
-		// paths: list.Concat([for l in pathsMap {l}])
-		// pullRequestPaths: list.Concat([for l in C.pullRequestPathsMap {l}])
-
-		// Generate jobs
-		for job in C.jobs {
+			// Inject pipeline configuration into jobs
 			if job.build != _|_ {
 				build: "\(job.name)-\(job.build.name)": job.build & {
 					name: "\(job.name)-\(job.build.name)"
@@ -86,6 +82,7 @@ import (
 		}
 	}
 
+	// Optionally create reusable actions
 	for job in C.jobs {
 		// Create reusable terraform actions
 		if job.type == "terraform" {
@@ -100,14 +97,15 @@ import (
 		}
 	}
 
-	if len(C.paths) > 0 {
+	// Create main jobs
+	if len(C._paths) > 0 {
 		main: git.#Workflow & {
 			"on": {
-				push: paths: C.paths
+				push: paths: C._paths
 			}
 			name: "main"
 			jobs: changes: #Changes & {
-				_changesMap: C.pathsMap
+				_changesMap: C._pathsMap
 			}
 			jobs: C.build
 			jobs: C.mainJobs
@@ -136,14 +134,16 @@ import (
 			jobs: C.manualJobs
 		}
 	}
-	if len(C.pullRequestPaths) > 0 {
+
+	// Create pull request job
+	if len(C._pullRequestPaths) > 0 {
 		pull_request: git.#Workflow & {
 			"on": {
-				pull_request: paths: C.pullRequestPaths
+				pull_request: paths: C._pullRequestPaths
 			}
 			name: "pull_request"
 			jobs: changes: #Changes & {
-				_changesMap: C.pullRequestPathsMap
+				_changesMap: C._pullRequestPathsMap
 			}
 			jobs: C.pullRequestJobs
 		}
